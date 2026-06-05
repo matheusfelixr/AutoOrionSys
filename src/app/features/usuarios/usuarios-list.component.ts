@@ -1,4 +1,4 @@
-import { Component, inject, signal, computed, OnInit } from '@angular/core';
+﻿import { Component, inject, signal, computed, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
   CardComponent,
@@ -51,18 +51,18 @@ import { RelatorioService } from '../../core/services/relatorio.service';
     <div class="page">
 
       <!-- Page Header -->
-      <ui-page-header title="Usuários" subtitle="Gerenciamento de usuários do sistema" [total]="filtered().length">
+      <ui-page-header title="UsuÃ¡rios" subtitle="Gerenciamento de usuÃ¡rios do sistema" [total]="filtered().length">
         <div actions style="display:flex;gap:0.75rem;align-items:center;">
           <div class="export-menu">
-            <ui-button variant="secondary" iconRight="▾" (clicked)="exportMenuOpenUsuarios.set(!exportMenuOpenUsuarios())">Exportar</ui-button>
+            <ui-button variant="secondary" iconRight="â–¾" (clicked)="exportMenuOpenUsuarios.set(!exportMenuOpenUsuarios())">Exportar</ui-button>
             @if (exportMenuOpenUsuarios()) {
               <div class="export-dropdown">
-                <button (click)="exportarCSV(); exportMenuOpenUsuarios.set(false)">📄 CSV</button>
-                <button (click)="imprimirRelatorio(); exportMenuOpenUsuarios.set(false)">🖨️ PDF / Imprimir</button>
+                <button (click)="exportarCSV(); exportMenuOpenUsuarios.set(false)">ðŸ“„ CSV</button>
+                <button (click)="imprimirRelatorio(); exportMenuOpenUsuarios.set(false)">ðŸ–¨ï¸ PDF / Imprimir</button>
               </div>
             }
           </div>
-          <ui-button variant="primary" iconLeft="+" (clicked)="openCreate()">Novo Usuário</ui-button>
+          <ui-button variant="primary" iconLeft="+" (clicked)="openCreate()">Novo UsuÃ¡rio</ui-button>
         </div>
       </ui-page-header>
 
@@ -72,7 +72,7 @@ import { RelatorioService } from '../../core/services/relatorio.service';
         [campoBusca]="campoBusca()"
         [placeholder]="campoBuscaPlaceholder"
         [totalResults]="filtered().length"
-        totalLabel="usuário(s) encontrado(s)"
+        totalLabel="usuÃ¡rio(s) encontrado(s)"
         [isLoading]="isLoading()"
         [hasActiveFilters]="!!(busca() || perfilFiltro() || statusFiltro())"
         (searchChange)="onSearch($event)"
@@ -85,7 +85,7 @@ import { RelatorioService } from '../../core/services/relatorio.service';
 
       <!-- User List -->
       <ui-card>
-        <ui-card-header>Usuários</ui-card-header>
+        <ui-card-header>UsuÃ¡rios</ui-card-header>
         <ui-card-body>
           <div class="user-list">
             <!-- Sort header -->
@@ -98,7 +98,7 @@ import { RelatorioService } from '../../core/services/relatorio.service';
                 Perfil {{ sortIcon('perfil') }}
               </button>
               <button class="sort-btn" (click)="toggleSort('ultimoAcesso')">
-                Último acesso {{ sortIcon('ultimoAcesso') }}
+                Ãšltimo acesso {{ sortIcon('ultimoAcesso') }}
               </button>
               <div></div> <!-- actions placeholder -->
             </div>
@@ -110,10 +110,10 @@ import { RelatorioService } from '../../core/services/relatorio.service';
                   <span>{{ u.email }}</span>
                   <span>{{ u.cargo }}</span>
                 </div>
-                <!-- Badge "você" + último acesso -->
+                <!-- Badge "vocÃª" + Ãºltimo acesso -->
                 <div class="user-meta">
                   @if (u.id === currentUserId()) {
-                    <span class="you-badge">você</span>
+                    <span class="you-badge">vocÃª</span>
                   }
                   <span class="last-access">{{ formatDate(u.ultimoAcesso) }}</span>
                 </div>
@@ -128,13 +128,13 @@ import { RelatorioService } from '../../core/services/relatorio.service';
                   />
                 </div>
                 <div class="user-actions">
-                  <ui-button variant="ghost" size="sm" iconLeft="✏️" (clicked)="openEdit(u)">
+                  <ui-button variant="ghost" size="sm" iconLeft="âœï¸" (clicked)="openEdit(u)">
                     Editar
                   </ui-button>
                   <ui-button
                     variant="ghost"
                     size="sm"
-                    iconLeft="🗑"
+                    iconLeft="ðŸ—‘"
                     style="color: var(--ui-color-danger)"
                     (clicked)="confirmDelete(u)"
                   >
@@ -143,7 +143,7 @@ import { RelatorioService } from '../../core/services/relatorio.service';
                 </div>
               </div>
             } @empty {
-              <ui-empty-state icon="👥" title="Nenhum usuário encontrado" description="Tente ajustar os filtros ou crie um novo usuário." />
+              <ui-empty-state icon="ðŸ‘¥" title="Nenhum usuÃ¡rio encontrado" description="Tente ajustar os filtros ou crie um novo usuÃ¡rio." />
             }
           </div>
           <ui-pagination
@@ -159,19 +159,19 @@ import { RelatorioService } from '../../core/services/relatorio.service';
     <!-- Create/Edit Modal -->
     <ui-modal
       [open]="modalOpen()"
-      [title]="editingId() ? 'Editar Usuário' : 'Novo Usuário'"
+      [title]="editingId() ? 'Editar UsuÃ¡rio' : 'Novo UsuÃ¡rio'"
       size="lg"
       (closed)="onModalXClose()"
     >
       <div class="modal-form">
 
-        <!-- Banner de confirmação de descarte -->
+        <!-- Banner de confirmaÃ§Ã£o de descarte -->
         @if (confirmDiscard()) {
           <div class="discard-banner">
-            <span class="discard-banner__icon">⚠️</span>
+            <span class="discard-banner__icon">âš ï¸</span>
             <div class="discard-banner__text">
-              <strong>Alterações não salvas</strong>
-              <span>Se fechar, todas as informações editadas serão perdidas.</span>
+              <strong>AlteraÃ§Ãµes nÃ£o salvas</strong>
+              <span>Se fechar, todas as informaÃ§Ãµes editadas serÃ£o perdidas.</span>
             </div>
             <div class="discard-banner__actions">
               <ui-button variant="ghost" size="sm" (clicked)="continueEditing()">Continuar editando</ui-button>
@@ -232,17 +232,17 @@ import { RelatorioService } from '../../core/services/relatorio.service';
           />
         </div>
 
-        <!-- Seção de foto (colapsável) -->
+        <!-- SeÃ§Ã£o de foto (colapsÃ¡vel) -->
         <div class="foto-section">
           <button class="foto-toggle-btn" type="button" (click)="showFotoSection.set(!showFotoSection())">
-            <span>📷 {{ showFotoSection() ? 'Ocultar' : 'Adicionar foto do usuário' }}</span>
-            <span class="foto-toggle-chevron" [class.open]="showFotoSection()">▼</span>
+            <span>ðŸ“· {{ showFotoSection() ? 'Ocultar' : 'Adicionar foto do usuÃ¡rio' }}</span>
+            <span class="foto-toggle-chevron" [class.open]="showFotoSection()">â–¼</span>
           </button>
           @if (showFotoSection()) {
             <div class="foto-inner">
               @if (fotoUsuario()) {
                 <div class="foto-preview-row">
-                  <img [src]="fotoUsuario()!.previewUrl" class="foto-preview" alt="Foto do usuário" />
+                  <img [src]="fotoUsuario()!.previewUrl" class="foto-preview" alt="Foto do usuÃ¡rio" />
                   <div class="foto-preview-info">
                     <span class="foto-preview-name">Foto capturada</span>
                     <button class="foto-remove-btn" type="button" (click)="fotoUsuario.set(null)">Remover</button>
@@ -250,7 +250,7 @@ import { RelatorioService } from '../../core/services/relatorio.service';
                 </div>
               } @else {
                 <ui-photo-capture
-                  titulo="Foto do Usuário"
+                  titulo="Foto do UsuÃ¡rio"
                   [maxPhotos]="1"
                   [etapas]="[]"
                   (photosChange)="onFotoCapturada($event)"
@@ -270,15 +270,15 @@ import { RelatorioService } from '../../core/services/relatorio.service';
     <!-- Delete Confirmation Modal -->
     <ui-modal
       [open]="confirmDeleteOpen()"
-      title="Confirmar exclusão"
+      title="Confirmar exclusÃ£o"
       size="sm"
       (closed)="confirmDeleteOpen.set(false)"
     >
       <div class="delete-confirm-body">
         <p>
-          Deseja realmente excluir o usuário
+          Deseja realmente excluir o usuÃ¡rio
           <strong>{{ deletingUser()?.nome }}</strong>?
-          Esta ação não pode ser desfeita.
+          Esta aÃ§Ã£o nÃ£o pode ser desfeita.
         </p>
         <div class="modal-footer">
           <ui-button variant="ghost" (clicked)="confirmDeleteOpen.set(false)">Cancelar</ui-button>
@@ -481,7 +481,7 @@ import { RelatorioService } from '../../core/services/relatorio.service';
       line-height: 1.6;
     }
 
-    /* Banner de descarte de alterações */
+    /* Banner de descarte de alteraÃ§Ãµes */
     .discard-banner {
       display: flex;
       align-items: flex-start;
@@ -563,13 +563,13 @@ import { RelatorioService } from '../../core/services/relatorio.service';
     }
     .export-dropdown button:hover { background: var(--ui-color-surface-hover); }
 
-    /* ── Mobile responsive ── */
+    /* â”€â”€ Mobile responsive â”€â”€ */
     @media (max-width: 640px) {
       .page {
         padding: 1rem;
       }
 
-      /* Hide sort header on mobile — it doesn't work well with column layout */
+      /* Hide sort header on mobile â€” it doesn't work well with column layout */
       .sort-header {
         display: none;
       }
@@ -621,9 +621,9 @@ export class UsuariosListComponent implements OnInit {
 
   exportMenuOpenUsuarios = signal(false);
 
-  // ── Loading inicial ────────────────────────────────────────────────────────
+  // â”€â”€ Loading inicial â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
-  /** Indica que os dados estão sendo carregados do backend */
+  /** Indica que os dados estÃ£o sendo carregados do backend */
   isLoading = signal(false);
 
   ngOnInit(): void {
@@ -634,27 +634,27 @@ export class UsuariosListComponent implements OnInit {
     });
   }
 
-  // ── Filtros (padrão backend-ready) ────────────────────────────────────────
+  // â”€â”€ Filtros (padrÃ£o backend-ready) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   /**
-   * Por que um campo de busca específico?
+   * Por que um campo de busca especÃ­fico?
    *
-   * Busca em múltiplos campos → banco faz full scan:
-   *   WHERE nome ILIKE '%x%' OR email ILIKE '%x%'  ← não usa índice
+   * Busca em mÃºltiplos campos â†’ banco faz full scan:
+   *   WHERE nome ILIKE '%x%' OR email ILIKE '%x%'  â† nÃ£o usa Ã­ndice
    *
-   * Campo único → banco usa o índice da coluna:
-   *   WHERE nome ILIKE '%carlos%'  ← usa INDEX ON usuarios(nome)
+   * Campo Ãºnico â†’ banco usa o Ã­ndice da coluna:
+   *   WHERE nome ILIKE '%carlos%'  â† usa INDEX ON usuarios(nome)
    *
-   * Em produção: GET /api/usuarios?campo=nome&busca=carlos&perfil=admin&status=ativo&page=1&pageSize=8
+   * Em produÃ§Ã£o: GET /api/usuarios?campo=nome&busca=carlos&perfil=admin&status=ativo&page=1&pageSize=8
    */
 
-  /** Campo da busca textual — indexado no banco */
+  /** Campo da busca textual â€” indexado no banco */
   campoBusca = signal('nome');
 
-  /** Valor efetivo da busca — atualizado pelo SearchBarComponent via debounce */
+  /** Valor efetivo da busca â€” atualizado pelo SearchBarComponent via debounce */
   busca = signal('');
 
-  /** Filtros discretos — passados como query params ao backend */
+  /** Filtros discretos â€” passados como query params ao backend */
   perfilFiltro  = signal('');
   statusFiltro  = signal('');
 
@@ -666,7 +666,7 @@ export class UsuariosListComponent implements OnInit {
 
   readonly campoBuscaPlaceholders: Record<string, string> = {
     nome:  'Ex: Carlos Mendes',
-    email: 'Ex: carlos@flexsys',
+    email: 'Ex: carlos@autoorion',
     cargo: 'Ex: Engenheiro Civil',
   };
 
@@ -693,12 +693,12 @@ export class UsuariosListComponent implements OnInit {
     this.page.set(1);
   }
 
-  // ── Paginação ─────────────────────────────────────────────────────────────
+  // â”€â”€ PaginaÃ§Ã£o â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   page     = signal(1);
   readonly pageSize = 8;
 
-  // ── Sort ──────────────────────────────────────────────────────────────────
+  // â”€â”€ Sort â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   sortField = signal<string>('nome');
   sortDir   = signal<'asc' | 'desc'>('asc');
@@ -713,26 +713,26 @@ export class UsuariosListComponent implements OnInit {
   }
 
   sortIcon(field: string): string {
-    if (this.sortField() !== field) return '↕';
-    return this.sortDir() === 'asc' ? '↑' : '↓';
+    if (this.sortField() !== field) return 'â†•';
+    return this.sortDir() === 'asc' ? 'â†‘' : 'â†“';
   }
 
-  // ── Lista filtrada (leitura direta dos signals) ───────────────────────────
+  // â”€â”€ Lista filtrada (leitura direta dos signals) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   /**
    * Computed que filtra a lista local.
-   * Em produção, este computed seria substituído pela resposta paginada do backend.
-   * Os parâmetros mapeiam 1:1 para query params da API.
+   * Em produÃ§Ã£o, este computed seria substituÃ­do pela resposta paginada do backend.
+   * Os parÃ¢metros mapeiam 1:1 para query params da API.
    */
   filtered = computed(() => {
     const q     = this.busca().toLowerCase().trim();
-    const campo = this.campoBusca();   // ← signal lido diretamente
+    const campo = this.campoBusca();   // â† signal lido diretamente
     const p     = this.perfilFiltro();
     const s     = this.statusFiltro();
-    const list  = this.service.usuarios(); // ← signal lido diretamente (fix do bug)
+    const list  = this.service.usuarios(); // â† signal lido diretamente (fix do bug)
 
     const result = (!q && !p && !s) ? list : list.filter(u => {
-      // Busca em campo específico (backend: WHERE {campo} ILIKE '%{q}%')
+      // Busca em campo especÃ­fico (backend: WHERE {campo} ILIKE '%{q}%')
       if (q) {
         const val = campo === 'email' ? u.email
                   : campo === 'cargo' ? u.cargo
@@ -771,19 +771,19 @@ export class UsuariosListComponent implements OnInit {
     return this.filtered().slice(start, start + this.pageSize);
   });
 
-  // ── AuthService / currentUser ─────────────────────────────────────────────
+  // â”€â”€ AuthService / currentUser â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   currentUserId = computed(() => this.authService.currentUser()?.id ?? '');
 
   formatDate(date?: Date | string | null): string {
     if (!date) return 'nunca';
-    // O backend retorna strings ISO — converte para Date se necessário
+    // O backend retorna strings ISO â€” converte para Date se necessÃ¡rio
     const d = date instanceof Date ? date : new Date(date as string);
     if (isNaN(d.getTime())) return 'nunca';
     return d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: '2-digit' });
   }
 
-  // ── Modal criar/editar ────────────────────────────────────────────────────
+  // â”€â”€ Modal criar/editar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   modalOpen         = signal(false);
   confirmDeleteOpen = signal(false);
@@ -792,12 +792,12 @@ export class UsuariosListComponent implements OnInit {
   deletingUser      = signal<Usuario | null>(null);
   deleting          = signal(false);
 
-  /** True quando o usuário alterou algum campo sem salvar */
+  /** True quando o usuÃ¡rio alterou algum campo sem salvar */
   formDirty    = signal(false);
-  /** True quando exibe o banner de confirmação de descarte */
+  /** True quando exibe o banner de confirmaÃ§Ã£o de descarte */
   confirmDiscard = signal(false);
 
-  /** Foto do usuário no formulário */
+  /** Foto do usuÃ¡rio no formulÃ¡rio */
   fotoUsuario    = signal<CapturedPhoto | null>(null);
   showFotoSection = signal(false);
 
@@ -805,9 +805,9 @@ export class UsuariosListComponent implements OnInit {
     const photo = photos[0];
     if (!photo) { this.fotoUsuario.set(null); return; }
 
-    // Converte blob URL → data URL (base64) para persistir após o modal fechar.
+    // Converte blob URL â†’ data URL (base64) para persistir apÃ³s o modal fechar.
     // O PhotoCaptureComponent revoga os blob URLs no ngOnDestroy,
-    // então armazenamos a versão base64 para evitar ERR_FILE_NOT_FOUND.
+    // entÃ£o armazenamos a versÃ£o base64 para evitar ERR_FILE_NOT_FOUND.
     const reader = new FileReader();
     reader.onload = () => {
       this.fotoUsuario.set({ ...photo, previewUrl: reader.result as string });
@@ -827,7 +827,7 @@ export class UsuariosListComponent implements OnInit {
     { label: 'Todos',        value: ''            },
     { label: 'Admin',        value: 'admin'        },
     { label: 'Gerente',      value: 'gerente'      },
-    { label: 'Técnico',      value: 'tecnico'      },
+    { label: 'TÃ©cnico',      value: 'tecnico'      },
     { label: 'Visualizador', value: 'visualizador' },
   ];
 
@@ -840,7 +840,7 @@ export class UsuariosListComponent implements OnInit {
   readonly perfilFormOptions = [
     { label: 'Admin',        value: 'admin'        },
     { label: 'Gerente',      value: 'gerente'      },
-    { label: 'Técnico',      value: 'tecnico'      },
+    { label: 'TÃ©cnico',      value: 'tecnico'      },
     { label: 'Visualizador', value: 'visualizador' },
   ];
 
@@ -863,7 +863,7 @@ export class UsuariosListComponent implements OnInit {
     this.confirmDiscard.set(false);
     this.editingId.set(u.id);
 
-    // Carrega foto existente do usuário para preview
+    // Carrega foto existente do usuÃ¡rio para preview
     if (u.avatarUrl) {
       this.fotoUsuario.set({
         id: 'existing',
@@ -881,10 +881,10 @@ export class UsuariosListComponent implements OnInit {
     this.modalOpen.set(true);
   }
 
-  /** Marca o formulário como modificado */
+  /** Marca o formulÃ¡rio como modificado */
   markDirty(): void { this.formDirty.set(true); }
 
-  /** Botão Cancelar — verifica se há alterações antes de fechar */
+  /** BotÃ£o Cancelar â€” verifica se hÃ¡ alteraÃ§Ãµes antes de fechar */
   requestClose(): void {
     if (this.formDirty()) {
       this.confirmDiscard.set(true);
@@ -893,29 +893,29 @@ export class UsuariosListComponent implements OnInit {
     }
   }
 
-  /** Evento (closed) do modal — disparado pelo botão X */
+  /** Evento (closed) do modal â€” disparado pelo botÃ£o X */
   onModalXClose(): void {
     if (this.formDirty()) {
-      // Reabre o modal imediatamente e exibe o banner de confirmação
+      // Reabre o modal imediatamente e exibe o banner de confirmaÃ§Ã£o
       setTimeout(() => this.modalOpen.set(true), 0);
       this.confirmDiscard.set(true);
     }
-    // se não está sujo: modal fecha normalmente, limpamos o estado
+    // se nÃ£o estÃ¡ sujo: modal fecha normalmente, limpamos o estado
     else { this._doCloseModal(); }
   }
 
-  /** Usuário confirma que quer descartar as alterações */
+  /** UsuÃ¡rio confirma que quer descartar as alteraÃ§Ãµes */
   discardChanges(): void {
     this.confirmDiscard.set(false);
     this._doCloseModal();
   }
 
-  /** Usuário decide continuar editando */
+  /** UsuÃ¡rio decide continuar editando */
   continueEditing(): void {
     this.confirmDiscard.set(false);
   }
 
-  /** Fecha o modal e reseta TUDO — cache zerado */
+  /** Fecha o modal e reseta TUDO â€” cache zerado */
   private _doCloseModal(): void {
     this.modalOpen.set(false);
     this.formErrors = {};
@@ -934,20 +934,20 @@ export class UsuariosListComponent implements OnInit {
 
   private validateUsuarioForm(): boolean {
     this.formErrors = {};
-    if (!this.form.nome?.trim())  this.formErrors['nome']  = 'Nome é obrigatório';
-    if (!this.form.email?.trim()) this.formErrors['email'] = 'E-mail é obrigatório';
+    if (!this.form.nome?.trim())  this.formErrors['nome']  = 'Nome Ã© obrigatÃ³rio';
+    if (!this.form.email?.trim()) this.formErrors['email'] = 'E-mail Ã© obrigatÃ³rio';
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.form.email))
-      this.formErrors['email'] = 'E-mail inválido';
+      this.formErrors['email'] = 'E-mail invÃ¡lido';
     else {
-      // Verifica duplicidade de e-mail (ignora o próprio registro em edição)
+      // Verifica duplicidade de e-mail (ignora o prÃ³prio registro em ediÃ§Ã£o)
       const emailLower = this.form.email.toLowerCase();
       const duplicate = this.service.usuarios().find(u =>
         u.email.toLowerCase() === emailLower && u.id !== (this.editingId() ?? '')
       );
-      if (duplicate) this.formErrors['email'] = 'Este e-mail já está cadastrado';
+      if (duplicate) this.formErrors['email'] = 'Este e-mail jÃ¡ estÃ¡ cadastrado';
     }
-    if (!this.form.cargo?.trim()) this.formErrors['cargo'] = 'Cargo é obrigatório';
-    if (!this.form.perfil)        this.formErrors['perfil'] = 'Perfil é obrigatório';
+    if (!this.form.cargo?.trim()) this.formErrors['cargo'] = 'Cargo Ã© obrigatÃ³rio';
+    if (!this.form.perfil)        this.formErrors['perfil'] = 'Perfil Ã© obrigatÃ³rio';
     return Object.keys(this.formErrors).length === 0;
   }
 
@@ -965,9 +965,9 @@ export class UsuariosListComponent implements OnInit {
     const obs = id ? this.service.update(id, payload) : this.service.create(payload);
     obs.subscribe({
       next:  () => {
-        this.toast.success(id ? 'Usuário atualizado!' : 'Usuário criado!');
+        this.toast.success(id ? 'UsuÃ¡rio atualizado!' : 'UsuÃ¡rio criado!');
         this.saving.set(false);
-        // Se o usuário editou o próprio avatar, atualiza a topbar em tempo real
+        // Se o usuÃ¡rio editou o prÃ³prio avatar, atualiza a topbar em tempo real
         if (id && id === this.authService.currentUser()?.id && payload.avatarUrl) {
           this.authService.updateCurrentUserAvatar(payload.avatarUrl);
         }
@@ -988,7 +988,7 @@ export class UsuariosListComponent implements OnInit {
     this.deleting.set(true);
     this.service.delete(u.id).subscribe({
       next: () => {
-        this.toast.success('Usuário excluído com sucesso!');
+        this.toast.success('UsuÃ¡rio excluÃ­do com sucesso!');
         this.confirmDeleteOpen.set(false);
         this.deletingUser.set(null);
         this.deleting.set(false);
@@ -1013,8 +1013,8 @@ export class UsuariosListComponent implements OnInit {
 
   imprimirRelatorio(): void {
     this.relatorio.imprimirTabela(
-      'Relatório de Usuários',
-      `${this.filtered().length} usuários encontrados`,
+      'RelatÃ³rio de UsuÃ¡rios',
+      `${this.filtered().length} usuÃ¡rios encontrados`,
       this.filtered() as Record<string, any>[],
       [
         { header: 'Nome', field: 'nome' },

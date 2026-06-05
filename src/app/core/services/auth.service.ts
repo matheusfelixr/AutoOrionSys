@@ -1,4 +1,4 @@
-import { Injectable, inject, signal } from '@angular/core';
+﻿import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of, tap, catchError, map, throwError } from 'rxjs';
 import { Usuario } from '../models/usuario.model';
@@ -23,16 +23,16 @@ interface LoginPayload {
   };
 }
 
-/** Formato retornado pelo backend — envelope ApiResponse<LoginPayload> */
+/** Formato retornado pelo backend â€” envelope ApiResponse<LoginPayload> */
 interface LoginResponse {
   success: boolean;
   data: LoginPayload;
   message: string;
 }
 
-const LS_USER_KEY    = 'flexsys-demo-user';
-const LS_TOKEN_KEY   = 'flexsys-jwt-token';
-const LS_REFRESH_KEY = 'flexsys-refresh-token';
+const LS_USER_KEY    = 'autoorion-demo-user';
+const LS_TOKEN_KEY   = 'autoorion-jwt-token';
+const LS_REFRESH_KEY = 'autoorion-refresh-token';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -41,12 +41,12 @@ export class AuthService {
 
   currentUser = signal<Usuario | null>(this._loadUser());
 
-  // ── Login ─────────────────────────────────────────────────────────────────
+  // â”€â”€ Login â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   /**
    * Realiza login.
-   * - useMockData: true  → busca no array mock local (sem HTTP)
-   * - useMockData: false → chama POST /api/auth/login no backend
+   * - useMockData: true  â†’ busca no array mock local (sem HTTP)
+   * - useMockData: false â†’ chama POST /api/auth/login no backend
    *
    * Sempre retorna Observable<boolean> para manter API consistente.
    */
@@ -71,7 +71,7 @@ export class AuthService {
     localStorage.removeItem(LS_USER_KEY);
     localStorage.removeItem(LS_TOKEN_KEY);
     localStorage.removeItem(LS_REFRESH_KEY);
-    localStorage.removeItem('flexsys-user-data');
+    localStorage.removeItem('autoorion-user-data');
   }
 
   isAuthenticated(): boolean {
@@ -79,8 +79,8 @@ export class AuthService {
   }
 
   /**
-   * Atualiza o próprio perfil via PUT /api/auth/me.
-   * Qualquer usuário pode chamar — não requer ADMIN/GERENTE.
+   * Atualiza o prÃ³prio perfil via PUT /api/auth/me.
+   * Qualquer usuÃ¡rio pode chamar â€” nÃ£o requer ADMIN/GERENTE.
    */
   updateMe(body: Record<string, unknown>): Observable<boolean> {
     return this.http.put<{ data: { avatarUrl?: string; nome?: string } }>(
@@ -92,8 +92,8 @@ export class AuthService {
   }
 
   /**
-   * Valida a sessão no startup — chama GET /api/auth/me.
-   * Se retornar erro (401/403), limpa a sessão.
+   * Valida a sessÃ£o no startup â€” chama GET /api/auth/me.
+   * Se retornar erro (401/403), limpa a sessÃ£o.
    * Chamado pelo ShellComponent ao inicializar.
    */
   validateSession(): Observable<boolean> {
@@ -109,13 +109,13 @@ export class AuthService {
     );
   }
 
-  /** Atualiza o avatarUrl do usuário logado (ex: após salvar foto no perfil) */
+  /** Atualiza o avatarUrl do usuÃ¡rio logado (ex: apÃ³s salvar foto no perfil) */
   updateCurrentUserAvatar(avatarUrl: string): void {
     const current = this.currentUser();
     if (!current) return;
     const updated = { ...current, avatarUrl };
     this.currentUser.set(updated);
-    localStorage.setItem('flexsys-user-data', JSON.stringify(updated));
+    localStorage.setItem('autoorion-user-data', JSON.stringify(updated));
   }
 
   getToken(): string | null {
@@ -148,7 +148,7 @@ export class AuthService {
     );
   }
 
-  // ── Private ───────────────────────────────────────────────────────────────
+  // â”€â”€ Private â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   private _mockLogin(email: string): Observable<boolean> {
     const user = MOCK_USUARIOS.find(
@@ -169,14 +169,14 @@ export class AuthService {
       .post<LoginResponse>(`${environment.apiUrl}/auth/login`, { email, senha })
       .pipe(
         tap(response => {
-          // Backend retorna ApiResponse<LoginPayload> — dados estão em response.data
+          // Backend retorna ApiResponse<LoginPayload> â€” dados estÃ£o em response.data
           const payload = response.data;
 
           // Salva token JWT e refresh token
           localStorage.setItem(LS_TOKEN_KEY, payload.token);
           localStorage.setItem(LS_REFRESH_KEY, payload.refreshToken ?? '');
 
-          // Converte UserInfo → Usuario
+          // Converte UserInfo â†’ Usuario
           const usuario: Usuario = {
             id:           payload.user.id,
             nome:         payload.user.nome,
@@ -192,9 +192,9 @@ export class AuthService {
 
           this.currentUser.set(usuario);
           localStorage.setItem(LS_USER_KEY, usuario.id);
-          localStorage.setItem('flexsys-user-data', JSON.stringify(usuario));
+          localStorage.setItem('autoorion-user-data', JSON.stringify(usuario));
 
-          // Seta permissões diretamente da resposta
+          // Seta permissÃµes diretamente da resposta
           this.perms.setFromLoginResponse(payload.screens);
         }),
         map(() => true),
@@ -214,9 +214,9 @@ export class AuthService {
         return MOCK_USUARIOS.find(u => u.id === id) ?? null;
       }
 
-      // Em modo real: recria usuário mínimo do localStorage para manter sessão
-      // Os dados completos virão do próximo reload (ou do token JWT)
-      const storedUser = localStorage.getItem('flexsys-user-data');
+      // Em modo real: recria usuÃ¡rio mÃ­nimo do localStorage para manter sessÃ£o
+      // Os dados completos virÃ£o do prÃ³ximo reload (ou do token JWT)
+      const storedUser = localStorage.getItem('autoorion-user-data');
       return storedUser ? JSON.parse(storedUser) : null;
     } catch {
       return null;

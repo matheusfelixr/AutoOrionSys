@@ -1,17 +1,17 @@
-import { Injectable, signal } from '@angular/core';
+﻿import { Injectable, signal } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class NotificationSoundService {
 
   private ctx: AudioContext | null = null;
   readonly soundEnabled = signal(
-    localStorage.getItem('flexsys-notif-sound') !== 'false'
+    localStorage.getItem('autoorion-notif-sound') !== 'false'
   );
 
   toggleSound(): void {
     const next = !this.soundEnabled();
     this.soundEnabled.set(next);
-    localStorage.setItem('flexsys-notif-sound', String(next));
+    localStorage.setItem('autoorion-notif-sound', String(next));
   }
 
   play(tipo: 'success' | 'info' | 'warning' | 'error'): void {
@@ -24,7 +24,7 @@ export class NotificationSoundService {
         case 'warning': this.playTones([440, 370], [0, 0.18], 0.14); break;
         case 'error':   this.playTones([440, 370, 311], [0, 0.15, 0.30], 0.15); break;
       }
-    } catch { /* AudioContext bloqueado antes de interação do usuário — silencioso */ }
+    } catch { /* AudioContext bloqueado antes de interaÃ§Ã£o do usuÃ¡rio â€” silencioso */ }
   }
 
   private playTones(freqs: number[], delays: number[], duration: number): void {

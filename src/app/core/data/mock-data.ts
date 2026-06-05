@@ -1,10 +1,10 @@
-import { Usuario } from '../models/usuario.model';
+﻿import { Usuario } from '../models/usuario.model';
 
 export const MOCK_USUARIOS: Usuario[] = [
   {
     id: 'u1',
     nome: 'Ana Souza',
-    email: 'ana.souza@flexsys.com.br',
+    email: 'ana.souza@autoorion.com.br',
     cargo: 'Gerente de Projetos',
     perfil: 'admin',
     status: 'ativo',
@@ -15,7 +15,7 @@ export const MOCK_USUARIOS: Usuario[] = [
   {
     id: 'u2',
     nome: 'Carlos Mendes',
-    email: 'carlos.mendes@flexsys.com.br',
+    email: 'carlos.mendes@autoorion.com.br',
     cargo: 'Consultor de Vendas',
     perfil: 'gerente',
     status: 'ativo',
@@ -26,7 +26,7 @@ export const MOCK_USUARIOS: Usuario[] = [
   {
     id: 'u3',
     nome: 'Fernanda Lima',
-    email: 'fernanda.lima@flexsys.com.br',
+    email: 'fernanda.lima@autoorion.com.br',
     cargo: 'Consultora de Vendas',
     perfil: 'gerente',
     status: 'ativo',
@@ -37,8 +37,8 @@ export const MOCK_USUARIOS: Usuario[] = [
   {
     id: 'u4',
     nome: 'Ricardo Alves',
-    email: 'ricardo.alves@flexsys.com.br',
-    cargo: 'Inspetor de Veículos',
+    email: 'ricardo.alves@autoorion.com.br',
+    cargo: 'Inspetor de VeÃ­culos',
     perfil: 'tecnico',
     status: 'ativo',
     telefone: '(48) 99404-5566',
@@ -47,8 +47,8 @@ export const MOCK_USUARIOS: Usuario[] = [
   },
   {
     id: 'u5',
-    nome: 'Patrícia Rocha',
-    email: 'patricia.rocha@flexsys.com.br',
+    nome: 'PatrÃ­cia Rocha',
+    email: 'patricia.rocha@autoorion.com.br',
     cargo: 'Analista de Frota',
     perfil: 'tecnico',
     status: 'ativo',
@@ -59,7 +59,7 @@ export const MOCK_USUARIOS: Usuario[] = [
   {
     id: 'u6',
     nome: 'Marcos Oliveira',
-    email: 'marcos.oliveira@flexsys.com.br',
+    email: 'marcos.oliveira@autoorion.com.br',
     cargo: 'Vistoriador',
     perfil: 'tecnico',
     status: 'ativo',
@@ -70,7 +70,7 @@ export const MOCK_USUARIOS: Usuario[] = [
   {
     id: 'u7',
     nome: 'Juliana Costa',
-    email: 'juliana.costa@flexsys.com.br',
+    email: 'juliana.costa@autoorion.com.br',
     cargo: 'Coordenadora Comercial',
     perfil: 'gerente',
     status: 'ativo',
@@ -81,8 +81,8 @@ export const MOCK_USUARIOS: Usuario[] = [
   {
     id: 'u8',
     nome: 'Eduardo Ferreira',
-    email: 'eduardo.ferreira@flexsys.com.br',
-    cargo: 'Técnico de Manutenção',
+    email: 'eduardo.ferreira@autoorion.com.br',
+    cargo: 'TÃ©cnico de ManutenÃ§Ã£o',
     perfil: 'tecnico',
     status: 'inativo',
     telefone: '(48) 99808-9900',
@@ -92,7 +92,7 @@ export const MOCK_USUARIOS: Usuario[] = [
   {
     id: 'u9',
     nome: 'Camila Santos',
-    email: 'camila.santos@flexsys.com.br',
+    email: 'camila.santos@autoorion.com.br',
     cargo: 'Analista de Contratos',
     perfil: 'visualizador',
     status: 'ativo',
@@ -103,8 +103,8 @@ export const MOCK_USUARIOS: Usuario[] = [
   {
     id: 'u10',
     nome: 'Rafael Torres',
-    email: 'rafael.torres@flexsys.com.br',
-    cargo: 'Mecânico Especialista',
+    email: 'rafael.torres@autoorion.com.br',
+    cargo: 'MecÃ¢nico Especialista',
     perfil: 'tecnico',
     status: 'ativo',
     telefone: '(48) 99000-1122',
@@ -114,7 +114,7 @@ export const MOCK_USUARIOS: Usuario[] = [
   {
     id: 'u11',
     nome: 'Beatriz Nunes',
-    email: 'beatriz.nunes@flexsys.com.br',
+    email: 'beatriz.nunes@autoorion.com.br',
     cargo: 'Supervisora de Qualidade',
     perfil: 'gerente',
     status: 'ativo',
@@ -125,7 +125,7 @@ export const MOCK_USUARIOS: Usuario[] = [
   {
     id: 'u12',
     nome: 'Anderson Pinto',
-    email: 'anderson.pinto@flexsys.com.br',
+    email: 'anderson.pinto@autoorion.com.br',
     cargo: 'Auxiliar de Vistoria',
     perfil: 'tecnico',
     status: 'inativo',
@@ -136,7 +136,7 @@ export const MOCK_USUARIOS: Usuario[] = [
   {
     id: 'u13',
     nome: 'Larissa Gomes',
-    email: 'larissa.gomes@flexsys.com.br',
+    email: 'larissa.gomes@autoorion.com.br',
     cargo: 'Consultora de Atendimento',
     perfil: 'tecnico',
     status: 'ativo',
@@ -147,7 +147,7 @@ export const MOCK_USUARIOS: Usuario[] = [
   {
     id: 'u14',
     nome: 'Diego Barbosa',
-    email: 'diego.barbosa@flexsys.com.br',
+    email: 'diego.barbosa@autoorion.com.br',
     cargo: 'Controlador de Estoque',
     perfil: 'visualizador',
     status: 'ativo',
@@ -158,7 +158,7 @@ export const MOCK_USUARIOS: Usuario[] = [
   {
     id: 'u15',
     nome: 'Isabela Martins',
-    email: 'isabela.martins@flexsys.com.br',
+    email: 'isabela.martins@autoorion.com.br',
     cargo: 'Diretora Comercial',
     perfil: 'admin',
     status: 'ativo',

@@ -1,11 +1,11 @@
-import { Injectable, inject, signal } from '@angular/core';
+﻿import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of, tap, catchError, map, throwError } from 'rxjs';
 import { Usuario } from '../models/usuario.model';
 import { MOCK_USUARIOS } from '../data/mock-data';
 import { environment } from '../../../environments/environment';
 
-/** Parâmetros de busca paginada — enviados ao backend */
+/** ParÃ¢metros de busca paginada â€” enviados ao backend */
 interface UsuarioPageParams {
   busca?: string;
   perfil?: string;
@@ -72,7 +72,7 @@ export class UsuariosService {
   }
 
   create(data: Partial<Usuario>): Observable<Usuario> {
-    const payload = { ...data, senha: 'flexsys123' };
+    const payload = { ...data, senha: 'autoorion123' };
     if (environment.useMockData) {
       const novo: Usuario = { id: `u-${Date.now()}`, nome: data.nome ?? '', email: data.email ?? '',
         cargo: data.cargo ?? '', perfil: data.perfil ?? 'visualizador', status: data.status ?? 'ativo',
@@ -83,7 +83,7 @@ export class UsuariosService {
     return this.http.post<{data: Usuario}>(`${this.API}`, payload).pipe(
       tap(resp => this._usuarios.update(list => [...list, resp.data])),
       map(resp => resp.data),
-      catchError(() => throwError(() => new Error('Erro ao criar usuário'))),
+      catchError(() => throwError(() => new Error('Erro ao criar usuÃ¡rio'))),
     );
   }
 
@@ -97,7 +97,7 @@ export class UsuariosService {
     return this.http.put<{data: Usuario}>(`${this.API}/${id}`, data).pipe(
       tap(resp => this._usuarios.update(list => list.map(u => u.id === id ? resp.data : u))),
       map(resp => resp.data),
-      catchError(() => throwError(() => new Error('Erro ao atualizar usuário'))),
+      catchError(() => throwError(() => new Error('Erro ao atualizar usuÃ¡rio'))),
     );
   }
 
@@ -108,7 +108,7 @@ export class UsuariosService {
     }
     return this.http.delete<void>(`${this.API}/${id}`).pipe(
       tap(() => this._usuarios.update(list => list.filter(u => u.id !== id))),
-      catchError(() => throwError(() => new Error('Erro ao excluir usuário'))),
+      catchError(() => throwError(() => new Error('Erro ao excluir usuÃ¡rio'))),
     );
   }
 }

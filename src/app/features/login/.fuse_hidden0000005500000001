@@ -1,14 +1,14 @@
-import { Component, inject, signal } from '@angular/core';
+﻿import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ButtonComponent, InputComponent, CheckboxComponent } from 'ui-lib';
 import { AuthService } from '../../core/services/auth.service';
 
 const DEMO_ACCOUNTS = [
-  { email: 'ana.souza@flexsys.com.br', perfil: 'admin' },
-  { email: 'carlos.mendes@flexsys.com.br', perfil: 'gerente' },
-  { email: 'ricardo.alves@flexsys.com.br', perfil: 'tecnico' },
-  { email: 'camila.santos@flexsys.com.br', perfil: 'visualizador' },
+  { email: 'ana.souza@autoorion.com.br', perfil: 'admin' },
+  { email: 'carlos.mendes@autoorion.com.br', perfil: 'gerente' },
+  { email: 'ricardo.alves@autoorion.com.br', perfil: 'tecnico' },
+  { email: 'camila.santos@autoorion.com.br', perfil: 'visualizador' },
 ];
 
 @Component({
@@ -21,15 +21,15 @@ const DEMO_ACCOUNTS = [
       <div class="login-brand">
         <div class="brand-content">
           <div class="brand-logo">
-            <span class="brand-icon">🚗</span>
-            <span class="brand-title">FlexSys</span>
+            <span class="brand-icon">ðŸš—</span>
+            <span class="brand-title">autoorion</span>
           </div>
-          <p class="brand-tagline">Gestão de Veículos Inteligente</p>
+          <p class="brand-tagline">GestÃ£o de VeÃ­culos Inteligente</p>
           <ul class="brand-features">
-            <li>✓ Controle de frota em tempo real</li>
-            <li>✓ Registro fotográfico de veículos</li>
-            <li>✓ Gestão de clientes e recursos</li>
-            <li>✓ Relatórios e dashboards avançados</li>
+            <li>âœ“ Controle de frota em tempo real</li>
+            <li>âœ“ Registro fotogrÃ¡fico de veÃ­culos</li>
+            <li>âœ“ GestÃ£o de clientes e recursos</li>
+            <li>âœ“ RelatÃ³rios e dashboards avanÃ§ados</li>
           </ul>
         </div>
       </div>
@@ -39,14 +39,14 @@ const DEMO_ACCOUNTS = [
         <div class="login-card">
           <div class="login-header">
             <h1 class="login-title">Bem-vindo de volta</h1>
-            <p class="login-subtitle">Entre com suas credenciais para acessar o sistema de gestão de veículos.</p>
+            <p class="login-subtitle">Entre com suas credenciais para acessar o sistema de gestÃ£o de veÃ­culos.</p>
           </div>
 
           <div class="login-form">
             <ui-input
               label="E-mail"
               type="email"
-              placeholder="seu@flexsys.com.br"
+              placeholder="seu@autoorion.com.br"
               [required]="true"
               [(ngModel)]="email"
               [errorMessage]="erroEmail()"
@@ -54,7 +54,7 @@ const DEMO_ACCOUNTS = [
             <ui-input
               label="Senha"
               type="password"
-              placeholder="••••••••"
+              placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
               [required]="true"
               [(ngModel)]="senha"
               [errorMessage]="erroSenha()"
@@ -65,7 +65,7 @@ const DEMO_ACCOUNTS = [
 
             @if (erro()) {
               <div class="error-message">
-                <span class="error-icon">⚠️</span>
+                <span class="error-icon">âš ï¸</span>
                 {{ erro() }}
               </div>
             }
@@ -84,8 +84,8 @@ const DEMO_ACCOUNTS = [
           <!-- Demo accounts section -->
           <div class="demo-section">
             <button class="demo-toggle" (click)="showDemoAccounts.set(!showDemoAccounts())">
-              <span>Contas de demonstração</span>
-              <span class="demo-chevron" [class.open]="showDemoAccounts()">▼</span>
+              <span>Contas de demonstraÃ§Ã£o</span>
+              <span class="demo-chevron" [class.open]="showDemoAccounts()">â–¼</span>
             </button>
             @if (showDemoAccounts()) {
               <div class="demo-accounts">
@@ -369,7 +369,7 @@ export class LoginComponent {
 
   fillDemo(email: string): void {
     this.email = email;
-    this.senha = 'flexsys123';
+    this.senha = 'autoorion123';
     this.showDemoAccounts.set(false);
   }
 
@@ -380,14 +380,14 @@ export class LoginComponent {
 
     let valid = true;
     if (!this.email.trim()) {
-      this.erroEmail.set('E-mail é obrigatório');
+      this.erroEmail.set('E-mail Ã© obrigatÃ³rio');
       valid = false;
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.email)) {
-      this.erroEmail.set('E-mail inválido');
+      this.erroEmail.set('E-mail invÃ¡lido');
       valid = false;
     }
     if (!this.senha.trim()) {
-      this.erroSenha.set('Senha é obrigatória');
+      this.erroSenha.set('Senha Ã© obrigatÃ³ria');
       valid = false;
     }
     if (!valid) return;
@@ -401,7 +401,7 @@ export class LoginComponent {
         this.router.navigate(['/']);
       },
       error: (err: Error) => {
-        this.erro.set(err.message || 'E-mail ou senha inválidos.');
+        this.erro.set(err.message || 'E-mail ou senha invÃ¡lidos.');
         this.loading.set(false);
       },
     });

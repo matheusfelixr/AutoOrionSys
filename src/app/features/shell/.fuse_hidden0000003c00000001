@@ -1,4 +1,4 @@
-import { Component, inject, signal, computed, effect } from '@angular/core';
+﻿import { Component, inject, signal, computed, effect } from '@angular/core';
 import { Router, RouterOutlet, NavigationEnd } from '@angular/router';
 import { filter, map } from 'rxjs/operators';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -11,24 +11,24 @@ import { NotificacoesService } from '../../core/services/notificacoes.service';
 
 const SECTION_LABELS: Record<string, string> = {
   dashboard:             'Dashboard',
-  obras:                 'Veículos',
-  'obras-group':         'Veículos',
-  'obras.diario':        'Ficha do Veículo',
-  usuarios:              'Usuários',
-  'usuarios-group':      'Usuários',
+  obras:                 'VeÃ­culos',
+  'obras-group':         'VeÃ­culos',
+  'obras.diario':        'Ficha do VeÃ­culo',
+  usuarios:              'UsuÃ¡rios',
+  'usuarios-group':      'UsuÃ¡rios',
   perfis:                'Perfis de Acesso',
   perfil:                'Meu Perfil',
   'config/telas':        'Telas do Sistema',
   'config/menus':        'Menus',
-  'config-group':        'Configurações',
+  'config-group':        'ConfiguraÃ§Ãµes',
   'config.telas':        'Telas do Sistema',
   'config.menus':        'Menus',
-  'notificacoes':        'Minhas Notificações',
-  'notificacoes-group':  'Notificações',
-  'notificacoes.admin':  'Gerenciar Notificações',
-  'parametros':          'Parâmetros',
-  'parametros-group':    'Parâmetros',
-  'parametros.grupos':   'Grupos de Parâmetros',
+  'notificacoes':        'Minhas NotificaÃ§Ãµes',
+  'notificacoes-group':  'NotificaÃ§Ãµes',
+  'notificacoes.admin':  'Gerenciar NotificaÃ§Ãµes',
+  'parametros':          'ParÃ¢metros',
+  'parametros-group':    'ParÃ¢metros',
+  'parametros.grupos':   'Grupos de ParÃ¢metros',
 };
 
 @Component({
@@ -38,8 +38,8 @@ const SECTION_LABELS: Record<string, string> = {
   template: `
     <div class="shell">
       <ui-sidebar
-        brand="FlexSys"
-        brandIcon="🚗"
+        brand="autoorion"
+        brandIcon="ðŸš—"
         [groups]="navGroups()"
         [collapsible]="true"
         [activeId]="activeId()"
@@ -54,14 +54,14 @@ const SECTION_LABELS: Record<string, string> = {
           <div class="topbar-right">
             <!-- Dark mode toggle -->
             <button class="topbar-btn" (click)="toggleDark()" [title]="isDark() ? 'Modo claro' : 'Modo escuro'">
-              {{ isDark() ? '☀️' : '🌙' }}
+              {{ isDark() ? 'â˜€ï¸' : 'ðŸŒ™' }}
             </button>
 
             <!-- Notification bell -->
             <div class="notif-wrapper" style="position:relative">
-              <button class="topbar-btn notif-btn" title="Notificações"
+              <button class="topbar-btn notif-btn" title="NotificaÃ§Ãµes"
                 (click)="notifPanelOpen.set(!notifPanelOpen()); $event.stopPropagation()">
-                🔔
+                ðŸ””
                 @if (notifCount() > 0) {
                   <span class="notif-badge">{{ notifCount() > 9 ? '9+' : notifCount() }}</span>
                 }
@@ -70,7 +70,7 @@ const SECTION_LABELS: Record<string, string> = {
               @if (notifPanelOpen()) {
                 <div class="notif-dropdown" (click)="$event.stopPropagation()">
                   <div class="notif-dropdown__header">
-                    <span class="notif-dropdown__title">Notificações</span>
+                    <span class="notif-dropdown__title">NotificaÃ§Ãµes</span>
                     @if (notifCount() > 0) {
                       <button class="notif-mark-all-btn"
                         (click)="markAllNotifRead()">
@@ -79,7 +79,7 @@ const SECTION_LABELS: Record<string, string> = {
                     }
                   </div>
                   @if (recentNotifs().length === 0) {
-                    <div class="notif-dropdown__empty">Nenhuma notificação</div>
+                    <div class="notif-dropdown__empty">Nenhuma notificaÃ§Ã£o</div>
                   } @else {
                     <div class="notif-dropdown__list">
                       @for (n of recentNotifs(); track n.id) {
@@ -100,7 +100,7 @@ const SECTION_LABELS: Record<string, string> = {
                     </div>
                     <div class="notif-dropdown__footer">
                       <button class="notif-ver-todas-btn" (click)="verTodasNotifs()">
-                        Ver todas as notificações →
+                        Ver todas as notificaÃ§Ãµes â†’
                       </button>
                     </div>
                   }
@@ -116,7 +116,7 @@ const SECTION_LABELS: Record<string, string> = {
                 variant="circle"
               />
               <span class="user-name">{{ firstName() }}</span>
-              <span class="user-chevron" [class.open]="userMenuOpen()">▼</span>
+              <span class="user-chevron" [class.open]="userMenuOpen()">â–¼</span>
 
               @if (userMenuOpen()) {
                 <div class="user-menu-dropdown" (click)="$event.stopPropagation()">
@@ -126,11 +126,11 @@ const SECTION_LABELS: Record<string, string> = {
                   </div>
                   <div class="user-menu-divider"></div>
                   <button class="user-menu-item" (click)="goToProfile()">
-                    <span>👤</span> Meu Perfil
+                    <span>ðŸ‘¤</span> Meu Perfil
                   </button>
                   <div class="user-menu-divider"></div>
                   <button class="user-menu-item user-menu-danger" (click)="logout()">
-                    <span>🚪</span> Sair
+                    <span>ðŸšª</span> Sair
                   </button>
                 </div>
               }
@@ -426,11 +426,11 @@ export class ShellComponent {
   notifPanelOpen = signal(false);
 
   constructor() {
-    // Restaura o tema do usuário logado sempre que ele muda (login/troca de conta)
+    // Restaura o tema do usuÃ¡rio logado sempre que ele muda (login/troca de conta)
     effect(() => {
       const userId = this.user()?.id;
       if (!userId) return;
-      const saved = localStorage.getItem(`flexsys-dark-${userId}`);
+      const saved = localStorage.getItem(`autoorion-dark-${userId}`);
       const dark  = saved === 'true';
       this.isDark.set(dark);
       document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
@@ -515,9 +515,9 @@ export class ShellComponent {
     const dark   = this.isDark();
     const userId = this.user()?.id;
     document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
-    // Persiste preferência por usuário
+    // Persiste preferÃªncia por usuÃ¡rio
     if (userId) {
-      localStorage.setItem(`flexsys-dark-${userId}`, String(dark));
+      localStorage.setItem(`autoorion-dark-${userId}`, String(dark));
     }
   }
 
@@ -548,8 +548,8 @@ export class ShellComponent {
   }
 
   notifIcon(tipo: string): string {
-    const m: Record<string, string> = { info: '🔵', sucesso: '✅', aviso: '⚠️', erro: '❌' };
-    return m[tipo] ?? '🔔';
+    const m: Record<string, string> = { info: 'ðŸ”µ', sucesso: 'âœ…', aviso: 'âš ï¸', erro: 'âŒ' };
+    return m[tipo] ?? 'ðŸ””';
   }
 
   markAllNotifRead(): void {

@@ -1,0 +1,273 @@
+import { Component, inject, signal, computed, effect } from '@angular/core';
+import { Router, RouterOutlet, NavigationEnd } from '@angular/router';
+import { filter, map } from 'rxjs/operators';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { SidebarComponent, AvatarComponent, NavGroup } from 'ui-lib';
+import { AuthService } from '../../core/services/auth.service';
+import { PermissionsService } from '../../core/services/permissions.service';
+import { MenusService } from '../../core/services/menus.service';
+import { TelasService } from '../../core/services/telas.service';
+import { NotificacoesService } from '../../core/services/notificacoes.service';
+
+const SECTION_LABELS: Record<string, string> = {
+  dashboard:             'Dashboard',
+  obras:                 'Veículos',
+  'obras-group':         'Veículos',
+  'obras.diario':        'Ficha do Veículo',
+  usuarios:              'Usuários',
+  'usuarios-group':      'Usuários',
+  perfis:                'Perfis de Acesso',
+  'status-obra':         'Status de Obra',
+  perfil:                'Meu Perfil',
+  'config/telas':        'Telas do Sistema',
+  'config/menus':        'Menus',
+  'config-group':        'Configurações',
+  'config.telas':        'Telas do Sistema',
+  'config.menus':        'Menus',
+  'notificacoes':        'Minhas Notificações',
+  'notificacoes-group':  'Notificações',
+  'notificacoes.admin':  'Gerenciar Notificações',
+  'parametros':          'Parâmetros',
+  'parametros-group':    'Parâmetros',
+  'parametros.grupos':   'Grupos de Parâmetros',
+};
+
+@Component({
+  selector: 'app-shell',
+  standalone: true,
+  imports: [RouterOutlet, SidebarComponent, AvatarComponent],
+  template: `
+    <div class="shell">
+      <ui-sidebar
+        brand="FlexSys"
+        brandIcon="🚗"
+        [groups]="navGroups()"
+        [collapsible]="true"
+        [activeId]="activeId()"
+        (itemClick)="onNavClick($event)"
+      />
+      <div class="shell-main">
+        <!-- Topbar -->
+        <header class="shell-topbar">
+          <div class="topbar-left">
+            <span class="topbar-section">{{ sectionLabel() }}</span>
+          </div>
+          <div class="topbar-right">
+            <!-- Dark mode toggle -->
+            <button class="topbar-btn" (click)="toggleDark()" [title]="isDark() ? 'Modo claro' : 'Modo escuro'">
+              {{ isDark() ? '☀️' : '🌙' }}
+            </button>
+
+            <!-- Notification bell -->
+            <div class="notif-wrapper" style="position:relative">
+              <button class="topbar-btn notif-btn" title="Notificações"
+                (click)="notifPanelOpen.set(!notifPanelOpen()); $event.stopPropagation()">
+                🔔
+                @if (notifCount() > 0) {
+                  <span class="notif-badge">{{ notifCount() > 9 ? '9+' : notifCount() }}</span>
+                }
+              </button>
+
+              @if (notifPanelOpen()) {
+                <div class="notif-dropdown" (click)="$event.stopPropagation()">
+                  <div class="notif-dropdown__header">
+                    <span class="notif-dropdown__title">Notificações</span>
+                    @if (notifCount() > 0) {
+                      <button class="notif-mark-all-btn"
+                        (click)="markAllNotifRead()">
+                        Marcar todas como lidas
+                      </button>
+                    }
+                  </div>
+                  @if (recentNotifs().length === 0) {
+                    <div class="notif-dropdown__empty">Nenhuma notificação</div>
+                  } @else {
+                    <div class="notif-dropdown__list">
+                      @for (n of recentNotifs(); track n.id) {
+                        <div class="notif-dropdown__item"
+                          [class.notif-dropdown__item--unread]="!notifService.isRead(n.id, user()!.id)"
+                          [class.notif-dropdown__item--info]="n.tipo === 'info'"
+                          [class.notif-dropdown__item--sucesso]="n.tipo === 'sucesso'"
+                          [class.notif-dropdown__item--aviso]="n.tipo === 'aviso'"
+                          [class.notif-dropdown__item--erro]="n.tipo === 'erro'"
+                          (click)="onNotifClick(n)">
+                          <span class="notif-dropdown__icon">{{ notifIcon(n.tipo) }}</span>
+                          <div class="notif-dropdown__body">
+                            <span class="notif-dropdown__titulo">{{ n.titulo }}</span>
+                            <span class="notif-dropdown__msg">{{ n.mensagem }}</span>
+                          </div>
+                        </div>
+                      }
+                    </div>
+                    <div class="notif-dropdown__footer">
+                      <button class="notif-ver-todas-btn" (click)="verTodasNotifs()">
+                        Ver todas as notificações →
+                      </button>
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+
+            <!-- User menu -->
+            <div class="user-section" (click)="toggleUserMenu()">
+              <ui-avatar
+                [name]="user()?.nome ?? ''"
+                size="sm"
+                variant="circle"
+              />
+              <span class="user-name">{{ firstName() }}</span>
+              <span class="user-chevron" [class.open]="userMenuOpen()">▼</span>
+
+              @if (userMenuOpen()) {
+                <div class="user-menu-dropdown" (click)="$event.stopPropagation()">
+                  <div class="user-menu-header">
+                    <span class="user-menu-name">{{ user()?.nome }}</span>
+                    <span class="user-menu-email">{{ user()?.email }}</span>
+                  </div>
+                  <div class="user-menu-divider"></div>
+                  <button class="user-menu-item" (click)="goToProfile()">
+                    <span>👤</span> Meu Perfil
+                  </button>
+                  <div class="user-menu-divider"></div>
+                  <button class="user-menu-item user-menu-danger" (click)="logout()">
+                    <span>🚪</span> Sair
+                  </button>
+                </div>
+              }
+            </div>
+          </div>
+        </header>
+
+        <!-- Main content -->
+        <main class="shell-body">
+          <router-outlet />
+        </main>
+      </div>
+    </div>
+
+    <!-- Backdrop for user menu -->
+    @if (userMenuOpen()) {
+      <div class="menu-backdrop" (click)="userMenuOpen.set(false); notifPanelOpen.set(false)"></div>
+    }
+  `,
+  styles: [`
+    .shell {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .shell-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .shell-body {
+      flex: 1;
+      overflow-y: auto;
+      background: var(--ui-color-bg-subtle);
+    }
+
+    /* Topbar */
+    .shell-topbar {
+      height: 56px;
+      background: #0d0f18;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      flex-shrink: 0;
+    }
+
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .topbar-section {
+      color: white;
+      font-size: 0.9375rem;
+      font-weight: 600;
+      letter-spacing: -0.2px;
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .topbar-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      background: none;
+      border: none;
+      border-radius: var(--ui-radius-md);
+      cursor: pointer;
+      font-size: 1.1rem;
+      transition: background var(--ui-transition-fast);
+      position: relative;
+    }
+
+    .topbar-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .notif-btn {
+      position: relative;
+    }
+
+    .notif-badge {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      background: #ef4444;
+      color: white;
+      font-size: 0.6rem;
+      font-weight: 700;
+      width: 14px;
+      height: 14px;
+      border-radius: 9999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1.5px solid #0d0f18;
+    }
+
+    /* User section */
+    .user-section {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.375rem 0.75rem;
+      border-radius: var(--ui-radius-md);
+      cursor: pointer;
+      transition: background var(--ui-transition-fast);
+      position: relative;
+      margin-left: 0.25rem;
+    }
+
+    .user-section:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .user-name {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .user-chevron {
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 0

@@ -1,0 +1,446 @@
+import { Component, inject, signal, computed, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { DatePipe } from '@angular/common';
+import {
+  CardComponent,
+  CardHeaderComponent,
+  CardBodyComponent,
+  BadgeComponent,
+  ButtonComponent,
+  InputComponent,
+  SelectComponent,
+  TextareaComponent,
+  PaginationComponent,
+  ModalComponent,
+  ToastService,
+  LoadingComponent,
+  ToggleComponent,
+  PageHeaderComponent,
+  SearchBarComponent,
+  EmptyStateComponent,
+} from 'ui-lib';
+import { NotificacoesService } from '../../../core/services/notificacoes.service';
+import { AuthService } from '../../../core/services/auth.service';
+import { Notificacao, NotificacaoTipo, NotificacaoDestinatario } from '../../../core/models/notificacao.model';
+
+interface NotifForm {
+  titulo: string;
+  mensagem: string;
+  tipo: NotificacaoTipo;
+  destinatario: NotificacaoDestinatario;
+  perfilAlvo: string;
+  usuarioAlvo: string;
+  link: string;
+  ativa: boolean;
+}
+
+const DEFAULT_FORM: NotifForm = {
+  titulo: '',
+  mensagem: '',
+  tipo: 'info',
+  destinatario: 'todos',
+  perfilAlvo: '',
+  usuarioAlvo: '',
+  link: '',
+  ativa: true,
+};
+
+@Component({
+  selector: 'app-notificacoes-admin',
+  standalone: true,
+  imports: [
+    FormsModule,
+    DatePipe,
+    CardComponent,
+    CardHeaderComponent,
+    CardBodyComponent,
+    BadgeComponent,
+    ButtonComponent,
+    InputComponent,
+    SelectComponent,
+    TextareaComponent,
+    PaginationComponent,
+    ModalComponent,
+    LoadingComponent,
+    ToggleComponent,
+    PageHeaderComponent,
+    SearchBarComponent,
+    EmptyStateComponent,
+  ],
+  template: `
+    <div class="crud-page">
+      <ui-page-header
+        title="Notificações"
+        subtitle="Envio e gestão de notificações do sistema"
+        [total]="filtered().length"
+      >
+        <ui-button actions variant="primary" iconLeft="+" (clicked)="openCreate()">Nova Notificação</ui-button>
+      </ui-page-header>
+
+      <ui-search-bar
+        placeholder="Buscar por título ou mensagem..."
+        [totalResults]="filtered().length"
+        totalLabel="notificação(ões) encontrada(s)"
+        [hasActiveFilters]="!!(search() || filterValues()['tipo'] !== 'todos' || filterValues()['destinatario'] !== 'todos')"
+        (searchChange)="onSearch($event)"
+        (clearFilters)="clearFilters()"
+      >
+        <ui-select filters label="Tipo" [options]="tipoOptions" [ngModel]="filterValues()['tipo']" (ngModelChange)="onTipoChange($event)" />
+        <ui-select filters label="Destinatário" [options]="destinatarioOptions" [ngModel]="filterValues()['destinatario']" (ngModelChange)="onDestinatarioChange($event)" />
+      </ui-search-bar>
+
+      @if (paginated().length === 0) {
+        <ui-empty-state
+          icon="🔔"
+          title="Nenhuma notificação encontrada"
+          description="Crie a primeira notificação do sistema."
+        />
+      } @else {
+        <div class="notif-list-admin">
+          @for (n of paginated(); track n.id) {
+            <ui-card>
+              <ui-card-body>
+                <div class="notif-card">
+                  <div class="notif-card-row">
+                    <div class="notif-card-header">
+                      <span class="notif-tipo-icon">{{ tipoIcon(n.tipo) }}</span>
+                      <span class="notif-titulo">{{ n.titulo }}</span>
+                      <ui-badge [variant]="tipoVariant(n.tipo)">{{ n.tipo }}</ui-badge>
+                      <ui-badge variant="neutral">{{ destinatarioLabel(n) }}</ui-badge>
+                      @if (!n.ativa) {
+                        <ui-badge variant="neutral">Inativa</ui-badge>
+                      }
+                    </div>
+                    <div class="notif-actions">
+                      <ui-button variant="ghost" size="sm" (clicked)="openEdit(n)">✏️</ui-button>
+                      <ui-button
+                        [variant]="n.ativa ? 'ghost' : 'success'"
+                        size="sm"
+                        (clicked)="toggleAtiva(n)"
+                      >{{ n.ativa ? 'Pausar' : 'Ativar' }}</ui-button>
+                      <ui-button variant="danger" size="sm" (clicked)="confirmDelete(n)">🗑️</ui-button>
+                    </div>
+                  </div>
+                  <p class="notif-msg">{{ n.mensagem }}</p>
+                  <div class="notif-footer">
+                    <span>{{ n.criadaEm | date:'dd/MM/yyyy HH:mm' }}</span>
+                    <span>Para: {{ destinatarioLabel(n) }}</span>
+                    @if (n.link) {
+                      <span class="notif-link-chip">{{ n.link }}</span>
+                    }
+                  </div>
+                </div>
+              </ui-card-body>
+            </ui-card>
+          }
+        </div>
+
+        <ui-pagination
+          [currentPage]="page()"
+          [totalPages]="totalPages()"
+          (pageChange)="page.set($event)"
+        />
+      }
+    </div>
+
+    <!-- Create/Edit Modal -->
+    <ui-modal
+      [open]="modalOpen()"
+      [title]="editingId() ? 'Editar Notificação' : 'Nova Notificação'"
+      size="lg"
+      (close)="closeModal()"
+    >
+      <div class="modal-form">
+        <ui-input
+          label="Título"
+          placeholder="Título da notificação"
+          [(ngModel)]="form.titulo"
+          [required]="true"
+        />
+        <ui-textarea
+          label="Mensagem"
+          placeholder="Mensagem da notificação..."
+          [rows]="3"
+          [(ngModel)]="form.mensagem"
+        />
+        <ui-select
+          label="Tipo"
+          [(ngModel)]="form.tipo"
+          [options]="tipoOptions"
+        />
+        <ui-select
+          label="Destinatário"
+          [(ngModel)]="form.destinatario"
+          [options]="destinatarioOptions"
+        />
+        @if (form.destinatario === 'perfil') {
+          <ui-select
+            label="Perfil Alvo"
+            [(ngModel)]="form.perfilAlvo"
+            [options]="perfilOptions"
+          />
+        }
+        @if (form.destinatario === 'usuario') {
+          <ui-input
+            label="ID do Usuário Alvo"
+            placeholder="Ex: u7"
+            [(ngModel)]="form.usuarioAlvo"
+          />
+        }
+        <ui-input
+          label="Link (opcional)"
+          placeholder="/obras"
+          [(ngModel)]="form.link"
+        />
+        <ui-select
+          label="Ativo"
+          [(ngModel)]="form.ativaStr"
+          [options]="ativoOptions"
+        />
+
+        <!-- Preview -->
+        <div class="notif-preview">
+          <div class="notif-preview__header">Preview</div>
+          <div class="notif-preview__card notif-preview__card--{{ form.tipo }}">
+            <span class="notif-preview__icon">{{ tipoIcon(form.tipo) }}</span>
+            <div>
+              <strong>{{ form.titulo || 'Título da notificação' }}</strong>
+              <p style="margin:0.25rem 0 0; font-size:0.875rem; color:var(--ui-color-text-secondary)">
+                {{ form.mensagem || 'Mensagem da notificação...' }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div slot="footer" style="display:flex;gap:0.5rem;justify-content:flex-end">
+        <ui-button variant="ghost" (clicked)="closeModal()">Cancelar</ui-button>
+        <ui-button variant="primary" (clicked)="save()" [disabled]="!form.titulo || !form.mensagem">
+          {{ editingId() ? 'Salvar' : 'Criar' }}
+        </ui-button>
+      </div>
+    </ui-modal>
+
+    <!-- Delete confirm modal -->
+    <ui-modal
+      [open]="deleteModalOpen()"
+      title="Excluir Notificação"
+      (close)="deleteModalOpen.set(false)"
+    >
+      <p>Tem certeza que deseja excluir a notificação <strong>{{ deletingItem()?.titulo }}</strong>?</p>
+      <div slot="footer" style="display:flex;gap:0.5rem;justify-content:flex-end">
+        <ui-button variant="ghost" (clicked)="deleteModalOpen.set(false)">Cancelar</ui-button>
+        <ui-button variant="danger" (clicked)="doDelete()">Excluir</ui-button>
+      </div>
+    </ui-modal>
+  `,
+  styles: [`
+    .crud-page { padding: 1.5rem 2rem; display: flex; flex-direction: column; gap: 1.5rem; width: 100%; box-sizing: border-box; }
+    .notif-list-admin { display: flex; flex-direction: column; gap: 0.75rem; }
+    .notif-card { display: flex; flex-direction: column; gap: 0.5rem; }
+    .notif-card-row { display: flex; align-items: flex-start; gap: 0.75rem; }
+    .notif-card-header { display: flex; flex: 1; flex-wrap: wrap; align-items: center; gap: 0.75rem; }
+    .notif-tipo-icon { font-size: 1.25rem; flex-shrink: 0; }
+    .notif-titulo { flex: 1; font-size: 1rem; font-weight: 700; min-width: 0; }
+    .notif-msg { font-size: 0.875rem; color: var(--ui-color-text-secondary); margin: 0; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+    .notif-footer { display: flex; align-items: center; gap: 0.75rem; font-size: 0.75rem; color: var(--ui-color-text-muted); flex-wrap: wrap; }
+    .notif-link-chip { padding: 1px 8px; background: var(--ui-color-bg-subtle); border: 1px solid var(--ui-color-border); border-radius: 9999px; font-family: monospace; }
+    .notif-actions { display: flex; flex-direction: row; gap: 0.5rem; flex-shrink: 0; }
+    .modal-form { display: flex; flex-direction: column; gap: 1rem; }
+    .notif-preview { border: 1px solid var(--ui-color-border); border-radius: var(--ui-radius-md); overflow: hidden; margin-top: 0.5rem; }
+    .notif-preview__header { padding: 0.5rem 0.875rem; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: var(--ui-color-text-muted); background: var(--ui-color-bg-subtle); border-bottom: 1px solid var(--ui-color-border); }
+    .notif-preview__card { padding: 0.875rem 1rem; display: flex; gap: 0.75rem; }
+    .notif-preview__card--info { background: rgba(59,130,246,0.06); border-left: 3px solid #3b82f6; }
+    .notif-preview__card--sucesso { background: rgba(16,185,129,0.06); border-left: 3px solid #10b981; }
+    .notif-preview__card--aviso { background: rgba(245,158,11,0.06); border-left: 3px solid #f59e0b; }
+    .notif-preview__card--erro { background: rgba(239,68,68,0.06); border-left: 3px solid #ef4444; }
+    .notif-preview__icon { font-size: 1.25rem; flex-shrink: 0; }
+  `],
+})
+export class NotificacoesAdminComponent implements OnInit {
+  private notifService = inject(NotificacoesService);
+  private authService  = inject(AuthService);
+  private toast        = inject(ToastService);
+
+  search       = signal('');
+  filterValues = signal<Record<string, string>>({ tipo: 'todos', destinatario: 'todos' });
+  page         = signal(1);
+  pageSize     = 10;
+
+  modalOpen      = signal(false);
+  editingId      = signal<string | null>(null);
+  deleteModalOpen = signal(false);
+  deletingItem   = signal<Notificacao | null>(null);
+
+  form: NotifForm & { ativaStr: string } = { ...DEFAULT_FORM, ativaStr: 'true' };
+
+  tipoOptions = [
+    { value: 'info',    label: 'Info' },
+    { value: 'sucesso', label: 'Sucesso' },
+    { value: 'aviso',   label: 'Aviso' },
+    { value: 'erro',    label: 'Erro' },
+  ];
+
+  destinatarioOptions = [
+    { value: 'todos',   label: 'Todos' },
+    { value: 'perfil',  label: 'Perfil' },
+    { value: 'usuario', label: 'Usuário específico' },
+  ];
+
+  perfilOptions = [
+    { value: 'admin',       label: 'Admin' },
+    { value: 'gerente',     label: 'Gerente' },
+    { value: 'tecnico',     label: 'Técnico' },
+    { value: 'visualizador', label: 'Visualizador' },
+  ];
+
+  ativoOptions = [
+    { value: 'true',  label: 'Ativo' },
+    { value: 'false', label: 'Inativo' },
+  ];
+
+  filterDefs = [
+    {
+      key: 'tipo',
+      label: 'Tipo',
+      options: [
+        { value: 'todos',   label: 'Todos os tipos' },
+        { value: 'info',    label: 'Info' },
+        { value: 'sucesso', label: 'Sucesso' },
+        { value: 'aviso',   label: 'Aviso' },
+        { value: 'erro',    label: 'Erro' },
+      ],
+    },
+    {
+      key: 'destinatario',
+      label: 'Destinatário',
+      options: [
+        { value: 'todos',    label: 'Todos os dest.' },
+        { value: 'todos-d',  label: 'Todos os usuários' },
+        { value: 'perfil',   label: 'Perfil' },
+        { value: 'usuario',  label: 'Usuário específico' },
+      ],
+    },
+  ];
+
+  filtered = computed(() => {
+    const q   = this.search().toLowerCase();
+    const fv  = this.filterValues();
+    return this.notifService.notificacoes()
+      .filter(n => {
+        if (q && !n.titulo.toLowerCase().includes(q) && !n.mensagem.toLowerCase().includes(q)) return false;
+        if (fv['tipo'] && fv['tipo'] !== 'todos' && n.tipo !== fv['tipo']) return false;
+        if (fv['destinatario'] && fv['destinatario'] !== 'todos') {
+          const d = fv['destinatario'] === 'todos-d' ? 'todos' : fv['destinatario'];
+          if (n.destinatario !== d) return false;
+        }
+        return true;
+      })
+      .sort((a, b) => b.criadaEm.getTime() - a.criadaEm.getTime());
+  });
+
+  totalPages = computed(() => Math.max(1, Math.ceil(this.filtered().length / this.pageSize)));
+
+  onSearch(value: string): void { this.search.set(value); this.page.set(1); }
+  onTipoChange(v: string): void { this.filterValues.update(fv => ({ ...fv, tipo: v })); this.page.set(1); }
+  onDestinatarioChange(v: string): void { this.filterValues.update(fv => ({ ...fv, destinatario: v })); this.page.set(1); }
+  clearFilters(): void { this.search.set(''); this.filterValues.set({ tipo: 'todos', destinatario: 'todos' }); this.page.set(1); }
+
+  paginated = computed(() => {
+    const start = (this.page() - 1) * this.pageSize;
+    return this.filtered().slice(start, start + this.pageSize);
+  });
+
+  ngOnInit(): void {}
+
+  tipoIcon(tipo: string): string {
+    const map: Record<string, string> = { info: '🔵', sucesso: '✅', aviso: '⚠️', erro: '❌' };
+    return map[tipo] ?? '🔵';
+  }
+
+  tipoVariant(tipo: string): 'primary' | 'success' | 'warning' | 'danger' | 'neutral' {
+    const map: Record<string, any> = { info: 'primary', sucesso: 'success', aviso: 'warning', erro: 'danger' };
+    return map[tipo] ?? 'neutral';
+  }
+
+  destinatarioLabel(n: Notificacao): string {
+    if (n.destinatario === 'todos')   return 'Todos';
+    if (n.destinatario === 'perfil')  return `Perfil: ${n.perfilAlvo}`;
+    if (n.destinatario === 'usuario') return `Usuário: ${n.usuarioAlvo}`;
+    return n.destinatario;
+  }
+
+  openCreate(): void {
+    this.editingId.set(null);
+    this.form = { ...DEFAULT_FORM, ativaStr: 'true' };
+    this.modalOpen.set(true);
+  }
+
+  openEdit(n: Notificacao): void {
+    this.editingId.set(n.id);
+    this.form = {
+      titulo: n.titulo,
+      mensagem: n.mensagem,
+      tipo: n.tipo,
+      destinatario: n.destinatario,
+      perfilAlvo: n.perfilAlvo ?? '',
+      usuarioAlvo: n.usuarioAlvo ?? '',
+      link: n.link ?? '',
+      ativa: n.ativa,
+      ativaStr: n.ativa ? 'true' : 'false',
+    };
+    this.modalOpen.set(true);
+  }
+
+  closeModal(): void { this.modalOpen.set(false); }
+
+  save(): void {
+    const userId = this.authService.currentUser()?.id ?? 'u1';
+    const ativa  = this.form.ativaStr === 'true';
+    const data: Omit<Notificacao, 'id'> = {
+      titulo:       this.form.titulo,
+      mensagem:     this.form.mensagem,
+      tipo:         this.form.tipo,
+      destinatario: this.form.destinatario,
+      perfilAlvo:   this.form.destinatario === 'perfil'  ? this.form.perfilAlvo  : undefined,
+      usuarioAlvo:  this.form.destinatario === 'usuario' ? this.form.usuarioAlvo : undefined,
+      link:         this.form.link || undefined,
+      criadaEm:     new Date(),
+      criadaPor:    userId,
+      ativa,
+    };
+    const id = this.editingId();
+    if (id) {
+      this.notifService.update(id, data).subscribe(() => {
+        this.toast.success('Notificação atualizada!');
+        this.closeModal();
+      });
+    } else {
+      this.notifService.create(data).subscribe(() => {
+        this.toast.success('Notificação criada!');
+        this.closeModal();
+      });
+    }
+  }
+
+  toggleAtiva(n: Notificacao): void {
+    this.notifService.update(n.id, { ativa: !n.ativa }).subscribe(() => {
+      this.toast.success(n.ativa ? 'Notificação pausada.' : 'Notificação ativada.');
+    });
+  }
+
+  confirmDelete(n: Notificacao): void {
+    this.deletingItem.set(n);
+    this.deleteModalOpen.set(true);
+  }
+
+  doDelete(): void {
+    const n = this.deletingItem();
+    if (!n) return;
+    this.notifService.delete(n.id).subscribe(() => {
+      this.toast.success('Notificação excluída.');
+      this.deleteModalOpen.set(false);
+      this.deletingItem.set(null);
+    });
+  }
+}

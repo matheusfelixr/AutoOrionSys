@@ -1,0 +1,106 @@
+import { Routes } from '@angular/router';
+import { authGuard }   from './core/guards/auth.guard';
+import { screenGuard } from './core/guards/screen.guard';
+
+export const routes: Routes = [
+  {
+    path: 'login',
+    loadComponent: () =>
+      import('./features/login/login.component').then(m => m.LoginComponent),
+  },
+  {
+    path: '',
+    loadComponent: () =>
+      import('./features/shell/shell.component').then(m => m.ShellComponent),
+    canActivate: [authGuard],
+    children: [
+      {
+        path: 'dashboard',
+        canActivate: [screenGuard('dashboard')],
+        loadComponent: () =>
+          import('./features/dashboard/dashboard.component').then(m => m.DashboardComponent),
+      },
+      {
+        path: 'obras',
+        canActivate: [screenGuard('obras')],
+        loadComponent: () =>
+          import('./features/obras/obras-list.component').then(m => m.ObrasListComponent),
+      },
+      {
+        path: 'obras/:id/diario',
+        canActivate: [screenGuard('obras.diario')],
+        loadComponent: () =>
+          import('./features/obras/diario/diario.component').then(m => m.DiarioComponent),
+      },
+      {
+        path: 'usuarios',
+        canActivate: [screenGuard('usuarios')],
+        loadComponent: () =>
+          import('./features/usuarios/usuarios-list.component').then(m => m.UsuariosListComponent),
+      },
+      {
+        path: 'perfis',
+        canActivate: [screenGuard('perfis')],
+        loadComponent: () =>
+          import('./features/perfis/perfis.component').then(m => m.PerfisComponent),
+      },
+      {
+        path: 'status-obra',
+        canActivate: [screenGuard('status-obra')],
+        loadComponent: () =>
+          import('./features/status-obra/status-obra.component').then(m => m.StatusObraComponent),
+      },
+      {
+        path: 'perfil',
+        canActivate: [screenGuard('perfil')],
+        loadComponent: () =>
+          import('./features/perfil/perfil.component').then(m => m.PerfilComponent),
+      },
+      {
+        path: 'config/telas',
+        canActivate: [screenGuard('config.telas')],
+        loadComponent: () =>
+          import('./features/configuracoes/telas/telas.component').then(m => m.TelasComponent),
+      },
+      {
+        path: 'config/menus',
+        canActivate: [screenGuard('config.menus')],
+        loadComponent: () =>
+          import('./features/configuracoes/menus/menus.component').then(m => m.MenusComponent),
+      },
+      {
+        path: 'notificacoes',
+        canActivate: [authGuard],
+        loadComponent: () =>
+          import('./features/notificacoes/minha/minhas-notificacoes.component').then(m => m.MinhasNotificacoesComponent),
+      },
+      {
+        path: 'notificacoes/admin',
+        canActivate: [screenGuard('notificacoes.admin')],
+        loadComponent: () =>
+          import('./features/notificacoes/admin/notificacoes-admin.component').then(m => m.NotificacoesAdminComponent),
+      },
+      {
+        path: 'parametros',
+        canActivate: [screenGuard('parametros')],
+        loadComponent: () =>
+          import('./features/parametros/lista/parametros-lista.component').then(m => m.ParametrosListaComponent),
+      },
+      {
+        path: 'parametros/grupos',
+        canActivate: [screenGuard('parametros.grupos')],
+        loadComponent: () =>
+          import('./features/parametros/grupos/grupos-parametro.component').then(m => m.GruposParametroComponent),
+      },
+      {
+        path: '',
+        redirectTo: 'dashboard',
+        pathMatch: 'full',
+      },
+    ],
+  },
+  {
+    path: '**',
+    redirectTo: '/login',
+  },
+];

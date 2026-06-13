@@ -1,4 +1,4 @@
-﻿import { Injectable, signal } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class NotificationSoundService {
@@ -24,7 +24,7 @@ export class NotificationSoundService {
         case 'warning': this.playTones([440, 370], [0, 0.18], 0.14); break;
         case 'error':   this.playTones([440, 370, 311], [0, 0.15, 0.30], 0.15); break;
       }
-    } catch { /* AudioContext bloqueado antes de interaÃ§Ã£o do usuÃ¡rio â€” silencioso */ }
+    } catch { /* AudioContext bloqueado antes de interação do usuário — silencioso */ }
   }
 
   private playTones(freqs: number[], delays: number[], duration: number): void {

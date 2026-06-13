@@ -1,6 +1,6 @@
-﻿// =============================================================================
+// =============================================================================
 // PERMISSIONS SERVICE
-// Armazena e verifica as telas que o usuÃ¡rio logado pode acessar.
+// Armazena e verifica as telas que o usuário logado pode acessar.
 // =============================================================================
 
 import { Injectable, inject, signal } from '@angular/core';
@@ -18,15 +18,15 @@ const LS_KEY = 'autoorion-demo-screens';
 export class PermissionsService {
   private http = inject(HttpClient);
 
-  /** Telas permitidas para o usuÃ¡rio atual */
+  /** Telas permitidas para o usuário atual */
   private readonly _screens = signal<ScreenName[]>(this._loadFromStorage());
   readonly screens = this._screens.asReadonly();
 
-  // â”€â”€ Carregamento â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Carregamento ────────────────────────────────────────────────────────────
 
   /**
-   * Carrega permissÃµes apÃ³s o login.
-   * Em produÃ§Ã£o: GET /api/users/{id}/permissions
+   * Carrega permissões após o login.
+   * Em produção: GET /api/users/{id}/permissions
    * Em mock: retorna as telas definidas em MOCK_PERMISSIONS pelo perfil.
    */
   load(userId: string): Observable<ScreenName[]> {
@@ -47,17 +47,17 @@ export class PermissionsService {
           this._saveToStorage(screens);
         }),
         catchError(() => {
-          // Fallback: sem permissÃµes em caso de erro
+          // Fallback: sem permissões em caso de erro
           this._screens.set(['home', 'perfil']);
           return of(['home', 'perfil'] as ScreenName[]);
         }),
       );
   }
 
-  // â”€â”€ VerificaÃ§Ã£o â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Verificação ─────────────────────────────────────────────────────────────
 
   /**
-   * Retorna `true` se o usuÃ¡rio tem acesso Ã  tela informada.
+   * Retorna `true` se o usuário tem acesso à tela informada.
    *
    * @example
    * permissionsService.can('usuarios') // true para admin/gerente
@@ -67,29 +67,29 @@ export class PermissionsService {
   }
 
   /**
-   * Retorna `true` se o usuÃ¡rio tem acesso a TODAS as telas informadas.
+   * Retorna `true` se o usuário tem acesso a TODAS as telas informadas.
    */
   canAll(...screens: ScreenName[]): boolean {
     return screens.every(s => this.can(s));
   }
 
   /**
-   * Retorna `true` se o usuÃ¡rio tem acesso a QUALQUER uma das telas.
+   * Retorna `true` se o usuário tem acesso a QUALQUER uma das telas.
    */
   canAny(...screens: ScreenName[]): boolean {
     return screens.some(s => this.can(s));
   }
 
-  // â”€â”€ Lifecycle â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Lifecycle ───────────────────────────────────────────────────────────────
 
-  /** Limpa as permissÃµes ao fazer logout. */
+  /** Limpa as permissões ao fazer logout. */
   clear(): void {
     this._screens.set([]);
     localStorage.removeItem(LS_KEY);
   }
 
   /**
-   * Seta permissÃµes diretamente a partir da resposta do login.
+   * Seta permissões diretamente a partir da resposta do login.
    * Usado quando o backend retorna `screens[]` no payload do JWT response.
    */
   setFromLoginResponse(screens: string[]): void {
@@ -97,7 +97,7 @@ export class PermissionsService {
     this._saveToStorage(screens as ScreenName[]);
   }
 
-  // â”€â”€ Storage â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Storage ─────────────────────────────────────────────────────────────────
 
   private _saveToStorage(screens: ScreenName[]): void {
     localStorage.setItem(LS_KEY, JSON.stringify(screens));

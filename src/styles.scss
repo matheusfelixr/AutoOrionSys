@@ -1,6 +1,6 @@
 // ── Design tokens da ui-lib ──────────────────────────────────────────────────
-@use '../../ui-lib/src/lib/tokens/tokens' as ui;
-@use '../../ui-lib/src/lib/tokens/reset';
+@use 'ui-lib/src/lib/tokens/tokens' as ui;
+@use 'ui-lib/src/lib/tokens/reset';
 
 @include ui.apply-tokens;
 @include ui.apply-dark-tokens;

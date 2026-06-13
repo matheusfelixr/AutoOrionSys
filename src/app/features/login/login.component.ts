@@ -1,4 +1,4 @@
-﻿import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ButtonComponent, InputComponent, CheckboxComponent } from 'ui-lib';
@@ -21,15 +21,15 @@ const DEMO_ACCOUNTS = [
       <div class="login-brand">
         <div class="brand-content">
           <div class="brand-logo">
-            <span class="brand-icon">ðŸš—</span>
+            <span class="brand-icon">🚗</span>
             <span class="brand-title">autoorion</span>
           </div>
-          <p class="brand-tagline">GestÃ£o de VeÃ­culos Inteligente</p>
+          <p class="brand-tagline">Gestão de Veículos Inteligente</p>
           <ul class="brand-features">
-            <li>âœ“ Controle de frota em tempo real</li>
-            <li>âœ“ Registro fotogrÃ¡fico de veÃ­culos</li>
-            <li>âœ“ GestÃ£o de clientes e recursos</li>
-            <li>âœ“ RelatÃ³rios e dashboards avanÃ§ados</li>
+            <li>✓ Controle de frota em tempo real</li>
+            <li>✓ Registro fotográfico de veículos</li>
+            <li>✓ Gestão de clientes e recursos</li>
+            <li>✓ Relatórios e dashboards avançados</li>
           </ul>
         </div>
       </div>
@@ -39,7 +39,7 @@ const DEMO_ACCOUNTS = [
         <div class="login-card">
           <div class="login-header">
             <h1 class="login-title">Bem-vindo de volta</h1>
-            <p class="login-subtitle">Entre com suas credenciais para acessar o sistema de gestÃ£o de veÃ­culos.</p>
+            <p class="login-subtitle">Entre com suas credenciais para acessar o sistema de gestão de veículos.</p>
           </div>
 
           <div class="login-form">
@@ -55,7 +55,7 @@ const DEMO_ACCOUNTS = [
               label="Senha"
               type="password"
               [showPasswordToggle]="true"
-              placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+              placeholder="••••••••"
               [required]="true"
               [(ngModel)]="senha"
               [errorMessage]="erroSenha()"
@@ -66,7 +66,7 @@ const DEMO_ACCOUNTS = [
 
             @if (erro()) {
               <div class="error-message">
-                <span class="error-icon">âš ï¸</span>
+                <span class="error-icon">⚠ï¸</span>
                 {{ erro() }}
               </div>
             }
@@ -85,8 +85,8 @@ const DEMO_ACCOUNTS = [
           <!-- Demo accounts section -->
           <div class="demo-section">
             <button class="demo-toggle" (click)="showDemoAccounts.set(!showDemoAccounts())">
-              <span>Contas de demonstraÃ§Ã£o</span>
-              <span class="demo-chevron" [class.open]="showDemoAccounts()">â–¼</span>
+              <span>Contas de demonstração</span>
+              <span class="demo-chevron" [class.open]="showDemoAccounts()">▼</span>
             </button>
             @if (showDemoAccounts()) {
               <div class="demo-accounts">
@@ -381,14 +381,14 @@ export class LoginComponent {
 
     let valid = true;
     if (!this.email.trim()) {
-      this.erroEmail.set('E-mail Ã© obrigatÃ³rio');
+      this.erroEmail.set('E-mail é obrigatório');
       valid = false;
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.email)) {
-      this.erroEmail.set('E-mail invÃ¡lido');
+      this.erroEmail.set('E-mail inválido');
       valid = false;
     }
     if (!this.senha.trim()) {
-      this.erroSenha.set('Senha Ã© obrigatÃ³ria');
+      this.erroSenha.set('Senha é obrigatória');
       valid = false;
     }
     if (!valid) return;
@@ -402,7 +402,7 @@ export class LoginComponent {
         this.router.navigate(['/']);
       },
       error: (err: Error) => {
-        this.erro.set(err.message || 'E-mail ou senha invÃ¡lidos.');
+        this.erro.set(err.message || 'E-mail ou senha inválidos.');
         this.loading.set(false);
       },
     });

@@ -1,4 +1,4 @@
-﻿import { Injectable, inject, signal } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { Notificacao, NotificacaoLeitura } from '../models/notificacao.model';
@@ -9,50 +9,50 @@ import { NotificationSoundService } from './notification-sound.service';
 
 const MOCK_NOTIFICACOES: Notificacao[] = [
   {
-    id: 'n1', titulo: 'Novo veÃ­culo cadastrado', tipo: 'info', ativa: true,
-    mensagem: 'O veÃ­culo Toyota Corolla (ABC-1234) foi cadastrado com sucesso e estÃ¡ disponÃ­vel para consulta.',
+    id: 'n1', titulo: 'Novo veículo cadastrado', tipo: 'info', ativa: true,
+    mensagem: 'O veículo Toyota Corolla (ABC-1234) foi cadastrado com sucesso e está disponível para consulta.',
     destinatario: 'todos', link: '/obras',
     criadaEm: new Date('2026-05-28T08:30:00'), criadaPor: 'u1',
   },
   {
     id: 'n2', titulo: 'Status atualizado', tipo: 'sucesso', ativa: true,
-    mensagem: 'O veÃ­culo Jeep Compass (STU-2468) foi reservado por Pedro Alves. Confira a ficha do veÃ­culo.',
+    mensagem: 'O veículo Jeep Compass (STU-2468) foi reservado por Pedro Alves. Confira a ficha do veículo.',
     destinatario: 'perfil', perfilAlvo: 'gerente', link: '/obras',
     criadaEm: new Date('2026-05-28T10:00:00'), criadaPor: 'u1',
   },
   {
-    id: 'n3', titulo: 'AtenÃ§Ã£o: veÃ­culo em manutenÃ§Ã£o', tipo: 'aviso', ativa: true,
-    mensagem: 'O veÃ­culo Fiat Argo (MNO-7890) foi encaminhado para manutenÃ§Ã£o preventiva. Retorno previsto em 3 dias.',
+    id: 'n3', titulo: 'Atenção: veículo em manutenção', tipo: 'aviso', ativa: true,
+    mensagem: 'O veículo Fiat Argo (MNO-7890) foi encaminhado para manutenção preventiva. Retorno previsto em 3 dias.',
     destinatario: 'todos', link: '/obras',
     criadaEm: new Date('2026-05-27T14:15:00'), criadaPor: 'u1',
   },
   {
-    id: 'n4', titulo: 'UsuÃ¡rio inativado', tipo: 'aviso', ativa: true,
-    mensagem: 'O usuÃ¡rio "Eduardo Ferreira" foi inativado no sistema. Seus acessos foram revogados.',
+    id: 'n4', titulo: 'Usuário inativado', tipo: 'aviso', ativa: true,
+    mensagem: 'O usuário "Eduardo Ferreira" foi inativado no sistema. Seus acessos foram revogados.',
     destinatario: 'perfil', perfilAlvo: 'admin',
     criadaEm: new Date('2026-05-27T09:00:00'), criadaPor: 'u15',
   },
   {
-    id: 'n5', titulo: 'Ficha fotogrÃ¡fica registrada', tipo: 'sucesso', ativa: true,
-    mensagem: 'Ricardo Alves registrou novas fotos na ficha do veÃ­culo Toyota Corolla (ABC-1234) â€” Frente e Traseira.',
+    id: 'n5', titulo: 'Ficha fotográfica registrada', tipo: 'sucesso', ativa: true,
+    mensagem: 'Ricardo Alves registrou novas fotos na ficha do veículo Toyota Corolla (ABC-1234) — Frente e Traseira.',
     destinatario: 'perfil', perfilAlvo: 'gerente', link: '/obras',
     criadaEm: new Date('2026-05-26T16:45:00'), criadaPor: 'u4',
   },
   {
     id: 'n6', titulo: 'Novo perfil criado', tipo: 'info', ativa: true,
-    mensagem: 'Um novo perfil de acesso foi criado no sistema. Revise as permissÃµes em ConfiguraÃ§Ãµes â†’ Perfis.',
+    mensagem: 'Um novo perfil de acesso foi criado no sistema. Revise as permissões em Configurações → Perfis.',
     destinatario: 'perfil', perfilAlvo: 'admin', link: '/perfis',
     criadaEm: new Date('2026-05-25T11:30:00'), criadaPor: 'u1',
   },
   {
-    id: 'n7', titulo: 'VeÃ­culo sem vistoria recente', tipo: 'erro', ativa: true,
-    mensagem: 'O veÃ­culo Jeep Renegade (VWX-3690) estÃ¡ disponÃ­vel hÃ¡ mais de 30 dias sem vistoria registrada.',
+    id: 'n7', titulo: 'Veículo sem vistoria recente', tipo: 'erro', ativa: true,
+    mensagem: 'O veículo Jeep Renegade (VWX-3690) está disponível há mais de 30 dias sem vistoria registrada.',
     destinatario: 'usuario', usuarioAlvo: 'u7', link: '/obras',
     criadaEm: new Date('2026-05-24T09:00:00'), criadaPor: 'u1',
   },
   {
     id: 'n8', titulo: 'Bem-vindo ao autoorion!', tipo: 'sucesso', ativa: true,
-    mensagem: 'Bem-vindo ao sistema autoorion. Explore os mÃ³dulos disponÃ­veis e configure seu perfil.',
+    mensagem: 'Bem-vindo ao sistema autoorion. Explore os módulos disponíveis e configure seu perfil.',
     destinatario: 'todos', link: '/perfil',
     criadaEm: new Date('2026-05-20T08:00:00'), criadaPor: 'u1',
   },
@@ -66,12 +66,12 @@ const MOCK_LEITURAS: NotificacaoLeitura[] = [
 
 /** Maps a raw WebSocket notification payload to the existing Notificacao shape */
 function wsPayloadToNotificacao(raw: Record<string, unknown>): Notificacao {
-  // WS payload may use different field names â€” normalise them
+  // WS payload may use different field names — normalise them
   const tipo = String(raw['tipo'] ?? 'info');
   const tipoMap: Record<string, string> = { success: 'sucesso', warning: 'aviso', error: 'erro' };
   return {
     id:          String(raw['id'] ?? `ws-${Date.now()}`),
-    titulo:      String(raw['titulo'] ?? raw['title'] ?? 'Nova notificaÃ§Ã£o'),
+    titulo:      String(raw['titulo'] ?? raw['title'] ?? 'Nova notificação'),
     mensagem:    String(raw['mensagem'] ?? raw['message'] ?? ''),
     tipo:        (tipoMap[tipo] ?? tipo) as Notificacao['tipo'],
     destinatario: 'usuario',
@@ -96,7 +96,7 @@ export class NotificacoesService {
   readonly notificacoes = this._notificacoes.asReadonly();
   readonly leituras     = this._leituras.asReadonly();
 
-  // â”€â”€ Initialisation (WebSocket) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Initialisation (WebSocket) ────────────────────────────────────────────
 
   /** Call once from ShellComponent after session is validated */
   init(): void {
@@ -113,7 +113,7 @@ export class NotificacoesService {
     });
   }
 
-  // â”€â”€ Popup helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Popup helpers ─────────────────────────────────────────────────────────
 
   private toSoundTipo(tipo: Notificacao['tipo']): 'success' | 'info' | 'warning' | 'error' {
     const map: Record<Notificacao['tipo'], 'success' | 'info' | 'warning' | 'error'> = {
@@ -135,7 +135,7 @@ export class NotificacoesService {
     }
   }
 
-  // â”€â”€ Filtering â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Filtering ─────────────────────────────────────────────────────────────
 
   /** Returns notifications visible to the given user+perfil, sorted newest first */
   getForUser(userId: string, perfil: string): Notificacao[] {
@@ -163,7 +163,7 @@ export class NotificacoesService {
     return false;
   }
 
-  // â”€â”€ Read status â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Read status ───────────────────────────────────────────────────────────
 
   markAsRead(notificacaoId: string, userId: string): void {
     if (this.isRead(notificacaoId, userId)) return;
@@ -179,7 +179,7 @@ export class NotificacoesService {
     this._leituras.update(l => [...l, ...novas]);
   }
 
-  // â”€â”€ CRUD (admin) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── CRUD (admin) ──────────────────────────────────────────────────────────
 
   getAll(): Observable<Notificacao[]> {
     return of(this._notificacoes());

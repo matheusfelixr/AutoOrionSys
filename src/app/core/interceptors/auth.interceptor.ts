@@ -1,11 +1,11 @@
-﻿import { HttpInterceptorFn } from '@angular/common/http';
+import { HttpInterceptorFn } from '@angular/common/http';
 
 const TOKEN_KEY = 'autoorion-jwt-token';
 
 /**
- * Interceptor que adiciona o JWT token em todas as requisiÃ§Ãµes Ã  API.
- * Rotas pÃºblicas (ex: /api/auth/login) nÃ£o precisam de token â€”
- * o backend permite essas rotas sem autenticaÃ§Ã£o.
+ * Interceptor que adiciona o JWT token em todas as requisições à API.
+ * Rotas públicas (ex: /api/auth/login) não precisam de token —
+ * o backend permite essas rotas sem autenticação.
  */
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const token = localStorage.getItem(TOKEN_KEY);

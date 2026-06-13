@@ -1,4 +1,4 @@
-﻿import { Component, inject, signal, computed, effect, OnInit } from '@angular/core';
+import { Component, inject, signal, computed, effect, OnInit } from '@angular/core';
 import { Router, RouterOutlet, NavigationEnd } from '@angular/router';
 import { filter, map } from 'rxjs/operators';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -13,22 +13,22 @@ import { NotificationSoundService } from '../../core/services/notification-sound
 import { environment } from '../../../environments/environment';
 
 const SECTION_LABELS: Record<string, string> = {
-  home:                  'InÃ­cio',
-  usuarios:              'UsuÃ¡rios',
-  'usuarios-group':      'UsuÃ¡rios',
+  home:                  'Início',
+  usuarios:              'Usuários',
+  'usuarios-group':      'Usuários',
   perfis:                'Perfis de Acesso',
   perfil:                'Meu Perfil',
   'config/telas':        'Telas do Sistema',
   'config/menus':        'Menus',
-  'config-group':        'ConfiguraÃ§Ãµes',
+  'config-group':        'Configurações',
   'config.telas':        'Telas do Sistema',
   'config.menus':        'Menus',
-  'notificacoes':        'Minhas NotificaÃ§Ãµes',
-  'notificacoes-group':  'NotificaÃ§Ãµes',
-  'notificacoes.admin':  'Gerenciar NotificaÃ§Ãµes',
-  'parametros':          'ParÃ¢metros',
-  'parametros-group':    'ParÃ¢metros',
-  'parametros.grupos':   'Grupos de ParÃ¢metros',
+  'notificacoes':        'Minhas Notificações',
+  'notificacoes-group':  'Notificações',
+  'notificacoes.admin':  'Gerenciar Notificações',
+  'parametros':          'Parâmetros',
+  'parametros-group':    'Parâmetros',
+  'parametros.grupos':   'Grupos de Parâmetros',
 };
 
 @Component({
@@ -38,7 +38,7 @@ const SECTION_LABELS: Record<string, string> = {
   template: `
     @if (!networkStatus.isOnline()) {
       <div class="offline-banner">
-        âš ï¸ Sem conexÃ£o com a internet. Algumas funcionalidades podem nÃ£o estar disponÃ­veis.
+        ⚠ï¸ Sem conexão com a internet. Algumas funcionalidades podem não estar disponíveis.
       </div>
     }
 
@@ -51,7 +51,7 @@ const SECTION_LABELS: Record<string, string> = {
       <div class="sidebar-wrapper" [class.sidebar-open]="sidebarOpen()">
         <ui-sidebar
           brand="autoorion"
-          brandIcon="ðŸš—"
+          brandIcon="🚗"
           [groups]="navGroups()"
           [collapsible]="true"
           [activeId]="activeId()"
@@ -63,14 +63,14 @@ const SECTION_LABELS: Record<string, string> = {
         <header class="shell-topbar">
           <div class="topbar-left">
             <button class="topbar-btn hamburger-btn" (click)="sidebarOpen.set(!sidebarOpen())" title="Menu">
-              â˜°
+              ☰
             </button>
             <span class="topbar-section">{{ sectionLabel() }}</span>
           </div>
           <div class="topbar-right">
             <!-- Dark mode toggle -->
             <button class="topbar-btn" (click)="toggleDark()" [title]="isDark() ? 'Modo claro' : 'Modo escuro'">
-              {{ isDark() ? 'â˜€ï¸' : 'ðŸŒ™' }}
+              {{ isDark() ? '☀ï¸' : '🌙' }}
             </button>
 
             <!-- Sound toggle -->
@@ -79,14 +79,14 @@ const SECTION_LABELS: Record<string, string> = {
               [title]="notifSound.soundEnabled() ? 'Desativar som' : 'Ativar som'"
               (click)="notifSound.toggleSound()"
             >
-              {{ notifSound.soundEnabled() ? 'ðŸ””' : 'ðŸ”•' }}
+              {{ notifSound.soundEnabled() ? '🔔' : '🔕' }}
             </button>
 
             <!-- Notification bell -->
             <div class="notif-wrapper" style="position:relative">
-              <button class="topbar-btn notif-btn" title="NotificaÃ§Ãµes"
+              <button class="topbar-btn notif-btn" title="Notificações"
                 (click)="notifPanelOpen.set(!notifPanelOpen()); $event.stopPropagation()">
-                ðŸ””
+                🔔
                 @if (notifCount() > 0) {
                   <span class="notif-badge">{{ notifCount() > 9 ? '9+' : notifCount() }}</span>
                 }
@@ -95,7 +95,7 @@ const SECTION_LABELS: Record<string, string> = {
               @if (notifPanelOpen()) {
                 <div class="notif-dropdown" (click)="$event.stopPropagation()">
                   <div class="notif-dropdown__header">
-                    <span class="notif-dropdown__title">NotificaÃ§Ãµes</span>
+                    <span class="notif-dropdown__title">Notificações</span>
                     @if (notifCount() > 0) {
                       <button class="notif-mark-all-btn"
                         (click)="markAllNotifRead()">
@@ -104,7 +104,7 @@ const SECTION_LABELS: Record<string, string> = {
                     }
                   </div>
                   @if (recentNotifs().length === 0) {
-                    <div class="notif-dropdown__empty">Nenhuma notificaÃ§Ã£o</div>
+                    <div class="notif-dropdown__empty">Nenhuma notificação</div>
                   } @else {
                     <div class="notif-dropdown__list">
                       @for (n of recentNotifs(); track n.id) {
@@ -126,7 +126,7 @@ const SECTION_LABELS: Record<string, string> = {
                     </div>
                     <div class="notif-dropdown__footer">
                       <button class="notif-ver-todas-btn" (click)="verTodasNotifs()">
-                        Ver todas as notificaÃ§Ãµes â†’
+                        Ver todas as notificações →
                       </button>
                     </div>
                   }
@@ -143,7 +143,7 @@ const SECTION_LABELS: Record<string, string> = {
                 variant="circle"
               />
               <span class="user-name">{{ firstName() }}</span>
-              <span class="user-chevron" [class.open]="userMenuOpen()">â–¼</span>
+              <span class="user-chevron" [class.open]="userMenuOpen()">▼</span>
 
               @if (userMenuOpen()) {
                 <div class="user-menu-dropdown" (click)="$event.stopPropagation()">
@@ -153,11 +153,11 @@ const SECTION_LABELS: Record<string, string> = {
                   </div>
                   <div class="user-menu-divider"></div>
                   <button class="user-menu-item" (click)="goToProfile()">
-                    <span>ðŸ‘¤</span> Meu Perfil
+                    <span>👤</span> Meu Perfil
                   </button>
                   <div class="user-menu-divider"></div>
                   <button class="user-menu-item user-menu-danger" (click)="logout()">
-                    <span>ðŸšª</span> Sair
+                    <span>🚪</span> Sair
                   </button>
                 </div>
               }
@@ -239,7 +239,7 @@ const SECTION_LABELS: Record<string, string> = {
       flex-shrink: 0;
     }
 
-    /* Hamburger button â€” hidden on desktop, shown on mobile */
+    /* Hamburger button — hidden on desktop, shown on mobile */
     .hamburger-btn {
       display: none;
     }
@@ -484,7 +484,7 @@ const SECTION_LABELS: Record<string, string> = {
     }
     .notif-ver-todas-btn:hover { text-decoration: underline; }
 
-    /* â”€â”€ Mobile responsive â”€â”€ */
+    /* ── Mobile responsive ── */
     @media (max-width: 768px) {
       .mobile-sidebar-backdrop {
         display: block;
@@ -528,14 +528,14 @@ const SECTION_LABELS: Record<string, string> = {
 export class ShellComponent implements OnInit {
 
   ngOnInit(): void {
-    // Valida sessÃ£o no startup â€” se backend reiniciou (DB reset), desloga automaticamente
+    // Valida sessão no startup — se backend reiniciou (DB reset), desloga automaticamente
     if (!environment.useMockData) {
       this.auth.validateSession().subscribe(valid => {
         if (!valid) {
           this.router.navigate(['/login']);
           return;
         }
-        // SessÃ£o vÃ¡lida â€” carrega dados do menu e inicia notificaÃ§Ãµes em tempo real
+        // Sessão válida — carrega dados do menu e inicia notificações em tempo real
         this.menusService.getAll().subscribe();
         this.telasService.getAll().subscribe();
         this.notifService.init();
@@ -564,7 +564,7 @@ export class ShellComponent implements OnInit {
   sidebarOpen    = signal(false);
 
   constructor() {
-    // Restaura o tema do usuÃ¡rio logado sempre que ele muda (login/troca de conta)
+    // Restaura o tema do usuário logado sempre que ele muda (login/troca de conta)
     effect(() => {
       const userId = this.user()?.id;
       if (!userId) return;
@@ -603,7 +603,7 @@ export class ShellComponent implements OnInit {
     { initialValue: this._urlToActiveId(this.router.url) },
   );
 
-  sectionLabel = computed(() => SECTION_LABELS[this.activeId()] ?? 'InÃ­cio');
+  sectionLabel = computed(() => SECTION_LABELS[this.activeId()] ?? 'Início');
 
   firstName = computed(() => this.user()?.nome.split(' ')[0] ?? '');
 
@@ -618,7 +618,7 @@ export class ShellComponent implements OnInit {
 
     const homeGroup: NavGroup = {
       label: '',
-      items: [{ id: 'home', label: 'InÃ­cio', icon: 'ðŸ ' } as any],
+      items: [{ id: 'home', label: 'Início', icon: '🏠' } as any],
     };
 
     const dynamicGroups = grupos.map(grupo => {
@@ -660,7 +660,7 @@ export class ShellComponent implements OnInit {
     const dark   = this.isDark();
     const userId = this.user()?.id;
     document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
-    // Persiste preferÃªncia por usuÃ¡rio
+    // Persiste preferência por usuário
     if (userId) {
       localStorage.setItem(`autoorion-dark-${userId}`, String(dark));
     }
@@ -693,8 +693,8 @@ export class ShellComponent implements OnInit {
   }
 
   notifIcon(tipo: string): string {
-    const m: Record<string, string> = { info: 'â„¹ï¸', sucesso: 'âœ…', aviso: 'âš ï¸', erro: 'âŒ' };
-    return m[tipo] ?? 'ðŸ””';
+    const m: Record<string, string> = { info: 'ℹï¸', sucesso: '✅', aviso: '⚠ï¸', erro: 'âŒ' };
+    return m[tipo] ?? '🔔';
   }
 
   timeAgo(date: Date): string {
@@ -704,10 +704,10 @@ export class ShellComponent implements OnInit {
     const hours = Math.floor(diff / 3600000);
     const days  = Math.floor(diff / 86400000);
     if (mins < 1)   return 'agora';
-    if (mins < 60)  return `${mins}min atrÃ¡s`;
-    if (hours < 24) return `${hours}h atrÃ¡s`;
+    if (mins < 60)  return `${mins}min atrás`;
+    if (hours < 24) return `${hours}h atrás`;
     if (days === 1) return 'ontem';
-    return `${days}d atrÃ¡s`;
+    return `${days}d atrás`;
   }
 
   markAllNotifRead(): void {

@@ -1,7 +1,7 @@
-﻿// =============================================================================
-// PARÃ‚METROS SERVICE
-// CRUD de grupos e parÃ¢metros do sistema.
-// Em produÃ§Ã£o: substituir mock por chamadas HTTP reais.
+// =============================================================================
+// PARÂMETROS SERVICE
+// CRUD de grupos e parâmetros do sistema.
+// Em produção: substituir mock por chamadas HTTP reais.
 // =============================================================================
 
 import { Injectable, inject, signal } from '@angular/core';
@@ -11,39 +11,39 @@ import { GrupoParametro, Parametro } from '../models/parametro.model';
 import { environment } from '../../../environments/environment';
 
 const MOCK_GRUPOS: GrupoParametro[] = [
-  { id: 'gp1', nome: 'Geral',        descricao: 'ConfiguraÃ§Ãµes gerais do sistema',       ordem: 1, ativo: true },
-  { id: 'gp2', nome: 'Financeiro',   descricao: 'ConfiguraÃ§Ãµes financeiras e contÃ¡beis', ordem: 2, ativo: true },
-  { id: 'gp3', nome: 'Obras',        descricao: 'ConfiguraÃ§Ãµes para gestÃ£o de obras',    ordem: 3, ativo: true },
-  { id: 'gp4', nome: 'NotificaÃ§Ãµes', descricao: 'ConfiguraÃ§Ãµes do sistema de alertas',   ordem: 4, ativo: true },
-  { id: 'gp5', nome: 'SeguranÃ§a',    descricao: 'PolÃ­ticas de acesso e sessÃ£o',          ordem: 5, ativo: true },
+  { id: 'gp1', nome: 'Geral',        descricao: 'Configurações gerais do sistema',       ordem: 1, ativo: true },
+  { id: 'gp2', nome: 'Financeiro',   descricao: 'Configurações financeiras e contábeis', ordem: 2, ativo: true },
+  { id: 'gp3', nome: 'Obras',        descricao: 'Configurações para gestão de obras',    ordem: 3, ativo: true },
+  { id: 'gp4', nome: 'Notificações', descricao: 'Configurações do sistema de alertas',   ordem: 4, ativo: true },
+  { id: 'gp5', nome: 'Segurança',    descricao: 'Políticas de acesso e sessão',          ordem: 5, ativo: true },
 ];
 
 const MOCK_PARAMETROS: Parametro[] = [
-  // â”€â”€ Geral â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Geral ──────────────────────────────────────────────────────────────────
   { id: 'p01', nome: 'prmNomeSistema',     descricao: 'Nome exibido no sistema',              grupoId: 'gp1', valor: 'autoorion Demo',    tipo: 'texto',    ativo: true },
-  { id: 'p02', nome: 'prmVersao',          descricao: 'VersÃ£o atual do sistema',              grupoId: 'gp1', valor: '1.0.0',            tipo: 'texto',    ativo: true },
-  { id: 'p03', nome: 'prmFusoHorario',     descricao: 'Fuso horÃ¡rio padrÃ£o',                 grupoId: 'gp1', valor: 'America/Sao_Paulo', tipo: 'lista',   opcoes: ['America/Sao_Paulo', 'America/Manaus', 'America/Belem', 'UTC'], ativo: true },
-  { id: 'p04', nome: 'prmLinhasPorPagina', descricao: 'Registros por pÃ¡gina nas listagens',  grupoId: 'gp1', valor: '10',               tipo: 'lista',    opcoes: ['5', '10', '20', '50', '100'], ativo: true },
-  // â”€â”€ Financeiro â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-  { id: 'p05', nome: 'prmMoeda',              descricao: 'Moeda padrÃ£o do sistema',               grupoId: 'gp2', valor: 'BRL',  tipo: 'lista',    opcoes: ['BRL', 'USD', 'EUR'], ativo: true },
+  { id: 'p02', nome: 'prmVersao',          descricao: 'Versão atual do sistema',              grupoId: 'gp1', valor: '1.0.0',            tipo: 'texto',    ativo: true },
+  { id: 'p03', nome: 'prmFusoHorario',     descricao: 'Fuso horário padrão',                 grupoId: 'gp1', valor: 'America/Sao_Paulo', tipo: 'lista',   opcoes: ['America/Sao_Paulo', 'America/Manaus', 'America/Belem', 'UTC'], ativo: true },
+  { id: 'p04', nome: 'prmLinhasPorPagina', descricao: 'Registros por página nas listagens',  grupoId: 'gp1', valor: '10',               tipo: 'lista',    opcoes: ['5', '10', '20', '50', '100'], ativo: true },
+  // ── Financeiro ─────────────────────────────────────────────────────────────
+  { id: 'p05', nome: 'prmMoeda',              descricao: 'Moeda padrão do sistema',               grupoId: 'gp2', valor: 'BRL',  tipo: 'lista',    opcoes: ['BRL', 'USD', 'EUR'], ativo: true },
   { id: 'p06', nome: 'prmArredondamento',     descricao: 'Casas decimais para valores financeiros', grupoId: 'gp2', valor: '2',  tipo: 'numero',   ativo: true },
-  { id: 'p07', nome: 'prmExibirSimboloMoeda', descricao: 'Exibir sÃ­mbolo da moeda nos valores',   grupoId: 'gp2', valor: 'true', tipo: 'booleano', ativo: true },
-  { id: 'p08', nome: 'prmPrecisaoCalculo',    descricao: 'PrecisÃ£o decimal em cÃ¡lculos internos', grupoId: 'gp2', valor: '4',   tipo: 'numero',   ativo: true },
-  // â”€â”€ Obras â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  { id: 'p07', nome: 'prmExibirSimboloMoeda', descricao: 'Exibir símbolo da moeda nos valores',   grupoId: 'gp2', valor: 'true', tipo: 'booleano', ativo: true },
+  { id: 'p08', nome: 'prmPrecisaoCalculo',    descricao: 'Precisão decimal em cálculos internos', grupoId: 'gp2', valor: '4',   tipo: 'numero',   ativo: true },
+  // ── Obras ──────────────────────────────────────────────────────────────────
   { id: 'p09', nome: 'prmProgressoAlerta',     descricao: '% de progresso que dispara alerta de prazo',      grupoId: 'gp3', valor: '80',  tipo: 'numero',   ativo: true },
-  { id: 'p10', nome: 'prmDiasAvisoVencimento', descricao: 'Dias de antecedÃªncia para avisos de prazo',       grupoId: 'gp3', valor: '30',  tipo: 'numero',   ativo: true },
-  { id: 'p11', nome: 'prmEtapasPadrao',        descricao: 'Etapas padrÃ£o para novas obras (separadas por vÃ­rgula)', grupoId: 'gp3', valor: 'FundaÃ§Ã£o,Estrutura,Alvenaria,Cobertura,Acabamento', tipo: 'texto', ativo: true },
-  { id: 'p12', nome: 'prmDiarioObrigatorio',   descricao: 'Exigir diÃ¡rio fotogrÃ¡fico para concluir obra',    grupoId: 'gp3', valor: 'false', tipo: 'booleano', ativo: true },
-  // â”€â”€ NotificaÃ§Ãµes â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-  { id: 'p13', nome: 'prmNotifAtivadas',     descricao: 'Ativar sistema de notificaÃ§Ãµes',         grupoId: 'gp4', valor: 'true',  tipo: 'booleano', ativo: true },
-  { id: 'p14', nome: 'prmRetencaoNotif',     descricao: 'Dias de retenÃ§Ã£o de notificaÃ§Ãµes lidas', grupoId: 'gp4', valor: '90',    tipo: 'numero',   ativo: true },
-  { id: 'p15', nome: 'prmNotifEmailAtivado', descricao: 'Enviar notificaÃ§Ãµes por e-mail',         grupoId: 'gp4', valor: 'false', tipo: 'booleano', ativo: true },
-  { id: 'p16', nome: 'prmMaxNotifDropdown',  descricao: 'MÃ¡ximo de notificaÃ§Ãµes no dropdown',     grupoId: 'gp4', valor: '5',     tipo: 'numero',   ativo: true },
-  // â”€â”€ SeguranÃ§a â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-  { id: 'p17', nome: 'prmTempoSessao',        descricao: 'Tempo de inatividade para expirar sessÃ£o (minutos)', grupoId: 'gp5', valor: '60', tipo: 'numero',   ativo: true },
+  { id: 'p10', nome: 'prmDiasAvisoVencimento', descricao: 'Dias de antecedência para avisos de prazo',       grupoId: 'gp3', valor: '30',  tipo: 'numero',   ativo: true },
+  { id: 'p11', nome: 'prmEtapasPadrao',        descricao: 'Etapas padrão para novas obras (separadas por vírgula)', grupoId: 'gp3', valor: 'Fundação,Estrutura,Alvenaria,Cobertura,Acabamento', tipo: 'texto', ativo: true },
+  { id: 'p12', nome: 'prmDiarioObrigatorio',   descricao: 'Exigir diário fotográfico para concluir obra',    grupoId: 'gp3', valor: 'false', tipo: 'booleano', ativo: true },
+  // ── Notificações ───────────────────────────────────────────────────────────
+  { id: 'p13', nome: 'prmNotifAtivadas',     descricao: 'Ativar sistema de notificações',         grupoId: 'gp4', valor: 'true',  tipo: 'booleano', ativo: true },
+  { id: 'p14', nome: 'prmRetencaoNotif',     descricao: 'Dias de retenção de notificações lidas', grupoId: 'gp4', valor: '90',    tipo: 'numero',   ativo: true },
+  { id: 'p15', nome: 'prmNotifEmailAtivado', descricao: 'Enviar notificações por e-mail',         grupoId: 'gp4', valor: 'false', tipo: 'booleano', ativo: true },
+  { id: 'p16', nome: 'prmMaxNotifDropdown',  descricao: 'Máximo de notificações no dropdown',     grupoId: 'gp4', valor: '5',     tipo: 'numero',   ativo: true },
+  // ── Segurança ──────────────────────────────────────────────────────────────
+  { id: 'p17', nome: 'prmTempoSessao',        descricao: 'Tempo de inatividade para expirar sessão (minutos)', grupoId: 'gp5', valor: '60', tipo: 'numero',   ativo: true },
   { id: 'p18', nome: 'prmTentativasLogin',    descricao: 'Tentativas de login antes de bloquear',              grupoId: 'gp5', valor: '5',  tipo: 'numero',   ativo: true },
-  { id: 'p19', nome: 'prmSenhaMinCaracteres', descricao: 'MÃ­nimo de caracteres na senha',                      grupoId: 'gp5', valor: '8',  tipo: 'numero',   ativo: true },
-  { id: 'p20', nome: 'prmLogAtividades',      descricao: 'Registrar log de atividades dos usuÃ¡rios',           grupoId: 'gp5', valor: 'true', tipo: 'booleano', ativo: true },
+  { id: 'p19', nome: 'prmSenhaMinCaracteres', descricao: 'Mínimo de caracteres na senha',                      grupoId: 'gp5', valor: '8',  tipo: 'numero',   ativo: true },
+  { id: 'p20', nome: 'prmLogAtividades',      descricao: 'Registrar log de atividades dos usuários',           grupoId: 'gp5', valor: 'true', tipo: 'booleano', ativo: true },
 ];
 
 @Injectable({ providedIn: 'root' })
@@ -55,11 +55,11 @@ export class ParametrosService {
   private readonly _grupos    = signal<GrupoParametro[]>([...MOCK_GRUPOS]);
   private readonly _parametros = signal<Parametro[]>([...MOCK_PARAMETROS]);
 
-  /** Signal pÃºblico (somente leitura) */
+  /** Signal público (somente leitura) */
   readonly grupos    = this._grupos.asReadonly();
   readonly parametros = this._parametros.asReadonly();
 
-  // â”€â”€ Grupos â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Grupos ────────────────────────────────────────────────────────────────
 
   getGrupos(): Observable<GrupoParametro[]> {
     if (environment.useMockData) {
@@ -118,7 +118,7 @@ export class ParametrosService {
     this._grupos.set(sorted);
   }
 
-  // â”€â”€ ParÃ¢metros â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Parâmetros ────────────────────────────────────────────────────────────
 
   getParametros(): Observable<Parametro[]> {
     if (environment.useMockData) {

@@ -1,4 +1,4 @@
-﻿import { Usuario } from '../models/usuario.model';
+import { Usuario } from '../models/usuario.model';
 
 export const MOCK_USUARIOS: Usuario[] = [
   {
@@ -38,7 +38,7 @@ export const MOCK_USUARIOS: Usuario[] = [
     id: 'u4',
     nome: 'Ricardo Alves',
     email: 'ricardo.alves@autoorion.com.br',
-    cargo: 'Inspetor de VeÃ­culos',
+    cargo: 'Inspetor de Veículos',
     perfil: 'tecnico',
     status: 'ativo',
     telefone: '(48) 99404-5566',
@@ -47,7 +47,7 @@ export const MOCK_USUARIOS: Usuario[] = [
   },
   {
     id: 'u5',
-    nome: 'PatrÃ­cia Rocha',
+    nome: 'Patrícia Rocha',
     email: 'patricia.rocha@autoorion.com.br',
     cargo: 'Analista de Frota',
     perfil: 'tecnico',
@@ -82,7 +82,7 @@ export const MOCK_USUARIOS: Usuario[] = [
     id: 'u8',
     nome: 'Eduardo Ferreira',
     email: 'eduardo.ferreira@autoorion.com.br',
-    cargo: 'TÃ©cnico de ManutenÃ§Ã£o',
+    cargo: 'Técnico de Manutenção',
     perfil: 'tecnico',
     status: 'inativo',
     telefone: '(48) 99808-9900',
@@ -104,7 +104,7 @@ export const MOCK_USUARIOS: Usuario[] = [
     id: 'u10',
     nome: 'Rafael Torres',
     email: 'rafael.torres@autoorion.com.br',
-    cargo: 'MecÃ¢nico Especialista',
+    cargo: 'Mecânico Especialista',
     perfil: 'tecnico',
     status: 'ativo',
     telefone: '(48) 99000-1122',

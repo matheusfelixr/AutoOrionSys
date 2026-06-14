@@ -101,6 +101,14 @@ Versões do logo:
 - Versão favicon
 - Versão perfil Instagram (somente símbolo)
 
+Cores:
+
+--color-primary: #F97316;
+--color-secondary: #111827;
+--color-surface: #FFFFFF;
+--color-background: #F8F9FA;
+--color-text: #1F2937;
+
 ---
 
 ## 🌐 Presença Digital

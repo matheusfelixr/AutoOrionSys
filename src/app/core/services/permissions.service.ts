@@ -5,7 +5,7 @@
 
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of, tap, catchError } from 'rxjs';
+import { Observable, of, tap, map, catchError } from 'rxjs';
 import { ScreenName, ScreenActions, ActionName } from '../models/permissions.model';
 import { MOCK_PERMISSIONS, MOCK_ACTIONS } from '../data/mock-permissions';
 import { MOCK_USUARIOS } from '../data/mock-data';
@@ -48,12 +48,17 @@ export class PermissionsService implements UiPermissionsProvider {
     }
 
     return this.http
-      .get<ScreenName[]>(`${environment.apiUrl}/users/${userId}/permissions`)
+      .get<{ screens: ScreenName[]; permissoes: ScreenActions }>(`${environment.apiUrl}/users/${userId}/permissions`)
       .pipe(
-        tap(screens => {
+        tap(res => {
+          const screens   = res.screens ?? [];
+          const permissoes = res.permissoes ?? {};
           this._screens.set(screens);
+          this._actions.set(permissoes);
           this._saveToStorage(screens);
+          this._saveActionsToStorage(permissoes);
         }),
+        map(res => res.screens ?? []),
         catchError(() => {
           this._screens.set(['home', 'perfil']);
           return of(['home', 'perfil'] as ScreenName[]);

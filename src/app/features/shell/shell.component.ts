@@ -56,7 +56,7 @@ const ICON_MAP: Record<string, string> = {
   template: `
     @if (!networkStatus.isOnline()) {
       <div class="offline-banner">
-        ⚠ï¸ Sem conexão com a internet. Algumas funcionalidades podem não estar disponíveis.
+        ⚠️ Sem conexão com a internet. Algumas funcionalidades podem não estar disponíveis.
       </div>
     }
 
@@ -68,7 +68,7 @@ const ICON_MAP: Record<string, string> = {
     <div class="shell">
       <div class="sidebar-wrapper" [class.sidebar-open]="sidebarOpen()">
         <ui-sidebar
-          brand="autoorion"
+          brand="AutoOrion"
           brandIcon="🚗"
           [groups]="navGroups()"
           [collapsible]="true"
@@ -83,12 +83,15 @@ const ICON_MAP: Record<string, string> = {
             <button class="topbar-btn hamburger-btn" (click)="sidebarOpen.set(!sidebarOpen())" title="Menu">
               ☰
             </button>
+            @if (!isDark()) {
+              <img class="topbar-logo" src="assets/brand/logoFundoTransparente.png" alt="AutoOrion" />
+            }
             <span class="topbar-section">{{ sectionLabel() }}</span>
           </div>
           <div class="topbar-right">
             <!-- Dark mode toggle -->
             <button class="topbar-btn" (click)="toggleDark()" [title]="isDark() ? 'Modo claro' : 'Modo escuro'">
-              {{ isDark() ? '☀ï¸' : '🌙' }}
+              {{ isDark() ? '☀️' : '🌙' }}
             </button>
 
             <!-- Sound toggle -->
@@ -245,8 +248,8 @@ const ICON_MAP: Record<string, string> = {
     /* Topbar */
     .shell-topbar {
       height: 56px;
-      background: #0d0f18;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      background: var(--ui-color-bg-base);
+      border-bottom: 1px solid var(--ui-color-border);
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -268,8 +271,15 @@ const ICON_MAP: Record<string, string> = {
       gap: 0.75rem;
     }
 
+    .topbar-logo {
+      height: 32px;
+      width: auto;
+      object-fit: contain;
+      display: block;
+    }
+
     .topbar-section {
-      color: white;
+      color: var(--ui-color-text-primary);
       font-size: 0.9375rem;
       font-weight: 600;
       letter-spacing: -0.2px;
@@ -292,12 +302,14 @@ const ICON_MAP: Record<string, string> = {
       border-radius: var(--ui-radius-md);
       cursor: pointer;
       font-size: 1.1rem;
-      transition: background var(--ui-transition-fast);
+      color: var(--ui-color-text-secondary);
+      transition: background var(--ui-transition-fast), color var(--ui-transition-fast);
       position: relative;
     }
 
     .topbar-btn:hover {
-      background: rgba(255, 255, 255, 0.1);
+      background: var(--ui-color-bg-subtle);
+      color: var(--ui-color-text-primary);
     }
 
     .sound-toggle {
@@ -711,7 +723,7 @@ export class ShellComponent implements OnInit {
   }
 
   notifIcon(tipo: string): string {
-    const m: Record<string, string> = { info: 'ℹï¸', sucesso: '✅', aviso: '⚠ï¸', erro: 'âŒ' };
+    const m: Record<string, string> = { info: 'ℹï¸', sucesso: '✅', aviso: '⚠️', erro: 'âŒ' };
     return m[tipo] ?? '🔔';
   }
 

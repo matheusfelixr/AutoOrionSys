@@ -4,6 +4,7 @@ export interface Veiculo {
   modelo: string;
   marca: string;
   anoFabricacao?: number;
+  anoModelo?: number;
   cor?: string;
   km?: number;
   chassi?: string;
@@ -11,8 +12,6 @@ export interface Veiculo {
   numeroMotor?: string;
   podeVenderMotor?: boolean;
   baixado?: boolean;
-  responsavelId?: string;
-  responsavelNome?: string;
   descricao?: string;
   ativo?: boolean;
   criadoEm?: string;

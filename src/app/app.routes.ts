@@ -32,6 +32,12 @@ export const routes: Routes = [
           import('./features/marcas/marcas-list.component').then(m => m.MarcasListComponent),
       },
       {
+        path: 'cores',
+        canActivate: [screenGuard('cores')],
+        loadComponent: () =>
+          import('./features/cores/cores-list.component').then(m => m.CoresListComponent),
+      },
+      {
         path: 'usuarios',
         canActivate: [screenGuard('usuarios')],
         loadComponent: () =>

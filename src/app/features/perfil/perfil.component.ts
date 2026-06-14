@@ -254,7 +254,7 @@ export class PerfilComponent implements OnInit {
 
       const userId = this.authService.currentUser()?.id;
       if (userId && !environment.useMockData) {
-        this.fotosService.upload(photo, 'usuario', userId).subscribe({
+        this.fotosService.uploadFoto(photo, 'usuario', userId).subscribe({
           next: () => {}, // foto salva — toast aparece no salvarPerfil
           error: () => {},
         });

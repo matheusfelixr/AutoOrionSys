@@ -128,7 +128,7 @@ import { RelatorioService } from '../../core/services/relatorio.service';
                   />
                 </div>
                 <div class="user-actions">
-                  <ui-button variant="ghost" size="sm" iconLeft="âœï¸" (clicked)="openEdit(u)">
+                  <ui-button variant="ghost" size="sm" iconLeft="✏️" (clicked)="openEdit(u)">
                     Editar
                   </ui-button>
                   <ui-button

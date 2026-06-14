@@ -21,10 +21,10 @@ import { ScreenName, ScreenActions } from '../models/permissions.model';
 export const MOCK_PERMISSIONS: Record<PerfilUsuario, ScreenName[]> = {
   admin: [
     'home', 'veiculos', 'marcas', 'usuarios', 'perfis', 'perfil',
-    'config.telas', 'config.menus', 'notificacoes.admin', 'parametros', 'parametros.grupos',
+    'config.telas', 'config.menus', 'notificacoes.admin', 'parametros', 'parametros.grupos', 'cores',
   ],
   gerente: [
-    'home', 'veiculos', 'marcas', 'usuarios', 'perfis', 'perfil',
+    'home', 'veiculos', 'marcas', 'cores', 'usuarios', 'perfis', 'perfil',
     'notificacoes.admin', 'parametros',
   ],
   tecnico: [
@@ -43,6 +43,7 @@ export const MOCK_ACTIONS: Record<PerfilUsuario, ScreenActions> = {
   admin: {
     veiculos:          ['ver', 'criar', 'editar', 'excluir'],
     marcas:            ['ver', 'criar', 'editar', 'excluir'],
+    cores:             ['ver', 'criar', 'editar', 'excluir'],
     usuarios:          ['ver', 'criar', 'editar', 'excluir'],
     perfis:            ['ver', 'criar', 'editar', 'excluir'],
     parametros:        ['ver', 'criar', 'editar', 'excluir'],
@@ -51,6 +52,7 @@ export const MOCK_ACTIONS: Record<PerfilUsuario, ScreenActions> = {
   gerente: {
     veiculos:          ['ver', 'criar', 'editar', 'excluir'],
     marcas:            ['ver', 'criar', 'editar'],
+    cores:             ['ver', 'criar', 'editar'],
     usuarios:          ['ver', 'editar'],
     perfis:            ['ver'],
     parametros:        ['ver'],
@@ -59,9 +61,11 @@ export const MOCK_ACTIONS: Record<PerfilUsuario, ScreenActions> = {
   tecnico: {
     veiculos:          ['ver', 'criar', 'editar'],
     marcas:            ['ver'],
+    cores:             ['ver'],
   },
   visualizador: {
     veiculos:          ['ver'],
     marcas:            ['ver'],
+    cores:             ['ver'],
   },
 };

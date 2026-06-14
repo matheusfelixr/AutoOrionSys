@@ -17,6 +17,7 @@ const SECTION_LABELS: Record<string, string> = {
   veiculos:              'Cadastro de Veículos',
   'veiculos-group':      'Veículos',
   marcas:                'Cadastro de Marcas',
+  cores:                 'Cores',
   usuarios:              'Usuários',
   'usuarios-group':      'Usuários',
   perfis:                'Perfis de Acesso',
@@ -33,6 +34,20 @@ const SECTION_LABELS: Record<string, string> = {
   'parametros-group':    'Parâmetros',
   'parametros.grupos':   'Grupos de Parâmetros',
 };
+
+const ICON_MAP: Record<string, string> = {
+  HOME:    '🏠',
+  BELL:    '🔔',
+  CAR:     '🚗',
+  LIST:    '📋',
+  USERS:   '👥',
+  GEAR:    '⚙️',
+  WRENCH:  '🔧',
+  USER:    '👤',
+  DOOR:    '🚪',
+};
+
+
 
 @Component({
   selector: 'app-shell',
@@ -645,7 +660,7 @@ export class ShellComponent implements OnInit {
             .map(c => ({ id: c.screenName, label: c.nome }));
 
           const navItem: any = { id: t.screenName, label: t.nome };
-          if (t.icone) navItem['icon'] = t.icone;
+          if (t.icone) navItem['icon'] = ICON_MAP[t.icone] ?? t.icone;
           if (children.length) navItem['children'] = children;
           return navItem;
         });

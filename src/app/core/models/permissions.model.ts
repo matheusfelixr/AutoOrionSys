@@ -24,7 +24,8 @@ export type ScreenName =
   | 'config.menus'
   | 'notificacoes.admin'
   | 'parametros'
-  | 'parametros.grupos';
+  | 'parametros.grupos'
+  | 'cores';
 
 // Futuramente, adicionar aqui novas telas:
 //   | 'relatorios'

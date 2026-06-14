@@ -170,8 +170,7 @@ const FORM_VAZIO = (): Partial<Marca> => ({ nome: '' });
       flex-direction: column;
       gap: 1.25rem;
       padding: 1.5rem;
-      max-width: 900px;
-      margin: 0 auto;
+      
     }
     .loading-wrap {
       display: flex;

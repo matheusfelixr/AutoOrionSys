@@ -9,4 +9,6 @@ import { ToastContainerComponent } from 'ui-lib';
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
-export class AppComponent {}
+export class AppComponent {
+  title = 'autoorion-demo';
+}

@@ -20,6 +20,18 @@ export const routes: Routes = [
           import('./features/home/home.component').then(m => m.HomeComponent),
       },
       {
+        path: 'veiculos',
+        canActivate: [screenGuard('veiculos')],
+        loadComponent: () =>
+          import('./features/veiculos/veiculos-list.component').then(m => m.VeiculosListComponent),
+      },
+      {
+        path: 'marcas',
+        canActivate: [screenGuard('marcas')],
+        loadComponent: () =>
+          import('./features/marcas/marcas-list.component').then(m => m.MarcasListComponent),
+      },
+      {
         path: 'usuarios',
         canActivate: [screenGuard('usuarios')],
         loadComponent: () =>

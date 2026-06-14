@@ -13,6 +13,11 @@ import { AuthService } from '../../core/services/auth.service';
         <p>Selecione um módulo para começar</p>
       </div>
       <div class="home-cards">
+        <div class="module-card" (click)="nav('/veiculos')">
+          <span class="module-card__icon">🚗</span>
+          <strong>Veículos</strong>
+          <span>Cadastro e gestão de veículos</span>
+        </div>
         <div class="module-card" (click)="nav('/usuarios')">
           <span class="module-card__icon">👥</span>
           <strong>Usuários</strong>

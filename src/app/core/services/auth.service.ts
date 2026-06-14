@@ -4,6 +4,7 @@ import { Observable, of, tap, catchError, map, throwError } from 'rxjs';
 import { Usuario } from '../models/usuario.model';
 import { MOCK_USUARIOS } from '../data/mock-data';
 import { PermissionsService } from './permissions.service';
+import { ScreenActions } from '../models/permissions.model';
 import { environment } from '../../../environments/environment';
 
 /** Payload interno dentro do ApiResponse wrapper */
@@ -11,6 +12,7 @@ interface LoginPayload {
   token: string;
   refreshToken?: string;
   screens: string[];
+  permissoes?: ScreenActions;
   user: {
     id: string;
     nome: string;
@@ -194,8 +196,8 @@ export class AuthService {
           localStorage.setItem(LS_USER_KEY, usuario.id);
           localStorage.setItem('autoorion-user-data', JSON.stringify(usuario));
 
-          // Seta permissões diretamente da resposta
-          this.perms.setFromLoginResponse(payload.screens);
+          // Seta permissões (telas + ações granulares) diretamente da resposta
+          this.perms.setFromLoginResponse(payload.screens, payload.permissoes);
         }),
         map(() => true),
         catchError(err => {

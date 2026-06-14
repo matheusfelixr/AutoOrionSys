@@ -12,7 +12,7 @@
 // =============================================================================
 
 import { PerfilUsuario } from '../models/usuario.model';
-import { ScreenName } from '../models/permissions.model';
+import { ScreenName, ScreenActions } from '../models/permissions.model';
 
 /**
  * Mapa de permissões por perfil.
@@ -20,33 +20,48 @@ import { ScreenName } from '../models/permissions.model';
  */
 export const MOCK_PERMISSIONS: Record<PerfilUsuario, ScreenName[]> = {
   admin: [
-    'home',
-    'usuarios',
-    'perfis',
-    'perfil',
-    'config.telas',
-    'config.menus',
-    'notificacoes.admin',
-    'parametros',
-    'parametros.grupos',
+    'home', 'veiculos', 'marcas', 'usuarios', 'perfis', 'perfil',
+    'config.telas', 'config.menus', 'notificacoes.admin', 'parametros', 'parametros.grupos',
   ],
-
   gerente: [
-    'home',
-    'usuarios',
-    'perfis',
-    'perfil',
-    'notificacoes.admin',
-    'parametros',
+    'home', 'veiculos', 'marcas', 'usuarios', 'perfis', 'perfil',
+    'notificacoes.admin', 'parametros',
   ],
-
   tecnico: [
-    'home',
-    'perfil',
+    'home', 'veiculos', 'perfil',
   ],
-
   visualizador: [
-    'home',
-    'perfil',
+    'home', 'veiculos', 'perfil',
   ],
+};
+
+/**
+ * Permissões granulares por perfil (mock).
+ * Espelha o campo `permissoes` do PerfilAcesso no banco.
+ */
+export const MOCK_ACTIONS: Record<PerfilUsuario, ScreenActions> = {
+  admin: {
+    veiculos:          ['ver', 'criar', 'editar', 'excluir'],
+    marcas:            ['ver', 'criar', 'editar', 'excluir'],
+    usuarios:          ['ver', 'criar', 'editar', 'excluir'],
+    perfis:            ['ver', 'criar', 'editar', 'excluir'],
+    parametros:        ['ver', 'criar', 'editar', 'excluir'],
+    'notificacoes.admin': ['ver', 'criar', 'excluir'],
+  },
+  gerente: {
+    veiculos:          ['ver', 'criar', 'editar', 'excluir'],
+    marcas:            ['ver', 'criar', 'editar'],
+    usuarios:          ['ver', 'editar'],
+    perfis:            ['ver'],
+    parametros:        ['ver'],
+    'notificacoes.admin': ['ver', 'criar'],
+  },
+  tecnico: {
+    veiculos:          ['ver', 'criar', 'editar'],
+    marcas:            ['ver'],
+  },
+  visualizador: {
+    veiculos:          ['ver'],
+    marcas:            ['ver'],
+  },
 };

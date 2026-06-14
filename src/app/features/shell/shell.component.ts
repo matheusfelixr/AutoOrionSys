@@ -14,6 +14,9 @@ import { environment } from '../../../environments/environment';
 
 const SECTION_LABELS: Record<string, string> = {
   home:                  'Início',
+  veiculos:              'Cadastro de Veículos',
+  'veiculos-group':      'Veículos',
+  marcas:                'Cadastro de Marcas',
   usuarios:              'Usuários',
   'usuarios-group':      'Usuários',
   perfis:                'Perfis de Acesso',

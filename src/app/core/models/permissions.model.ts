@@ -15,6 +15,8 @@
  */
 export type ScreenName =
   | 'home'
+  | 'veiculos'
+  | 'marcas'
   | 'usuarios'
   | 'perfis'
   | 'perfil'
@@ -30,6 +32,21 @@ export type ScreenName =
 //   | 'config.empresa'
 
 /**
+ * Ações possíveis dentro de uma tela.
+ * 'ver'     → acessa a tela/listagem
+ * 'criar'   → vê/usa o botão de novo cadastro
+ * 'editar'  → vê/usa o botão de edição
+ * 'excluir' → vê/usa o botão de exclusão
+ */
+export type ActionName = 'ver' | 'criar' | 'editar' | 'excluir';
+
+/**
+ * Mapa de permissões granulares por tela.
+ * Ex: { veiculos: ['ver','criar','editar'], marcas: ['ver'] }
+ */
+export type ScreenActions = Partial<Record<string, ActionName[]>>;
+
+/**
  * Resposta do backend após login.
  * Em produção, vem junto com o token JWT.
  */
@@ -41,4 +58,5 @@ export interface AuthResponse {
   };
   token: string;
   screens: ScreenName[];
+  permissoes?: ScreenActions;
 }
